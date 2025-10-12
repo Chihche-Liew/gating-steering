@@ -8,6 +8,7 @@ import json
 import logging
 import os
 import re
+import random
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -128,6 +129,7 @@ def parse_args() -> argparse.Namespace:
         help="Keep the original prompt inside model outputs instead of stripping it.",
     )
     parser.set_defaults(strip_prompt_from_response=True)
+    parser.add_argument("--seed", type=int, default=42, help="Random seed for shuffling and sampling.")
     return parser.parse_args()
 
 
@@ -190,6 +192,7 @@ def main() -> None:
     args = parse_args()
 
     dataset = load_dataset(args.dataset_name, args.dataset_config, split=args.split)
+    rng = random.Random(args.seed)
     tokenizer, model, device = load_model_and_tokenizer(args.model_name)
 
     output_path: Path = args.output_path
@@ -211,9 +214,15 @@ def main() -> None:
     final_answer_pattern = args.final_answer_regex
 
     with output_path.open("w", encoding="utf-8") as sink:
+        seen_ids: set[str] = set()
         progress_total = args.max_samples if args.max_samples is not None else len(dataset)
-        for example in tqdm(dataset, desc="Collecting triples", total=progress_total):
+        for example in tqdm(dataset.shuffle(seed=args.seed), desc="Collecting triples", total=progress_total):
             stats["total_samples"] += 1
+
+            sample_identifier = str(example.get("id", stats["total_samples"]))
+            if sample_identifier in seen_ids:
+                continue
+            seen_ids.add(sample_identifier)
 
             prompt_text = example.get(args.prompt_field)
             gold_answer = example.get(args.gold_answer_field)

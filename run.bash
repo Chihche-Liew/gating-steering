@@ -5,7 +5,7 @@ set -euo pipefail
 MODEL_ID="meta-llama/Meta-Llama-3.1-8B"
 TRIPLES_OUT="artifacts/triples/triples_small.jsonl"
 MAX_SAMPLES=5
-MAX_NEW_TOKENS=64
+MAX_NEW_TOKENS=1024
 LAYERS="28 30"
 PROBE_LAYER=30
 PROBE_MAX=1000
