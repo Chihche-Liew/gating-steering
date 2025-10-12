@@ -117,10 +117,17 @@ def parse_args() -> argparse.Namespace:
         help="Case-insensitive regex to extract the final answer from the model response.",
     )
     parser.add_argument(
-        "--strip-prompt-from-response",
-        action="store_true",
-        help="Remove the prompt text from the decoded model response before analysis.",
+        "--system-prompt",
+        default="You are a careful reasoning assistant. Think step by step and end with 'Final answer: <choice>'.",
+        help="System message used when the tokenizer supports chat templates.",
     )
+    parser.add_argument(
+        "--keep-prompt-in-response",
+        action="store_false",
+        dest="strip_prompt_from_response",
+        help="Keep the original prompt inside model outputs instead of stripping it.",
+    )
+    parser.set_defaults(strip_prompt_from_response=True)
     return parser.parse_args()
 
 
@@ -128,11 +135,32 @@ def setup_logging() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
 
 
+ANSWER_PATTERNS = [
+    r"final\s+answer\s*[:\-]?\s*([A-J]|\w+)",
+    r"answer\s*[:\-]?\s*([A-J]|\w+)",
+    r"conclusion\s*[:\-]?\s*([A-J]|\w+)",
+    r"choice\s*[:\-]?\s*([A-J]|\w+)",
+]
+
+
 def extract_final_answer(text: str, pattern: str) -> str:
-    match = re.search(pattern, text, flags=re.IGNORECASE)
-    if match:
-        return match.group(1).strip()
-    return text.splitlines()[-1].strip()
+    candidates: List[str] = []
+    compiled = re.compile(pattern, flags=re.IGNORECASE)
+    for matcher in [compiled] + [re.compile(pat, flags=re.IGNORECASE) for pat in ANSWER_PATTERNS]:
+        match = matcher.search(text)
+        if match and match.group(1):
+            candidates.append(match.group(1).strip().strip("."))
+    if candidates:
+        return candidates[0]
+
+    fallback = text.strip().splitlines()
+    if fallback:
+        last_line = fallback[-1].strip()
+        single_choice = re.fullmatch(r"([A-J])\.?", last_line, flags=re.IGNORECASE)
+        if single_choice:
+            return single_choice.group(1)
+        return last_line
+    return ""
 
 
 def normalise_answer(answer: str) -> str:
@@ -206,7 +234,22 @@ def main() -> None:
             stats["evaluated_samples"] += 1
 
             formatted_prompt = args.prompt_template.format(prompt=str(prompt_text))
-            encoded = tokenizer(formatted_prompt, return_tensors="pt", return_attention_mask=True)
+            if hasattr(tokenizer, "apply_chat_template"):
+                messages = [
+                    {"role": "system", "content": args.system_prompt},
+                    {"role": "user", "content": formatted_prompt},
+                ]
+                formatted_prompt = tokenizer.apply_chat_template(
+                    messages,
+                    tokenize=False,
+                    add_generation_prompt=True,
+                )
+
+            encoded = tokenizer(
+                formatted_prompt,
+                return_tensors="pt",
+                return_attention_mask=True,
+            )
             input_ids = encoded["input_ids"].to(device)
             attention_mask = encoded["attention_mask"].to(device)
 
@@ -221,10 +264,9 @@ def main() -> None:
             with torch.no_grad():
                 generated_ids = model.generate(input_ids=input_ids, attention_mask=attention_mask, **generation_kwargs)
 
+            response_ids = generated_ids[0]
             if args.strip_prompt_from_response:
-                response_ids = generated_ids[0][input_ids.shape[1] :]
-            else:
-                response_ids = generated_ids[0]
+                response_ids = response_ids[input_ids.shape[1] :]
 
             decoded_response = tokenizer.decode(response_ids, skip_special_tokens=True).strip()
             predicted_answer = extract_final_answer(decoded_response, final_answer_pattern)
