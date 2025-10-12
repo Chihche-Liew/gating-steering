@@ -142,7 +142,8 @@ def normalise_answer(answer: str) -> str:
 def load_model_and_tokenizer(model_name: str):
     LOGGER.info("Loading model %s", model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16 if torch.cuda.is_available() else None)
+    dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+    model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=dtype)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     model.eval()
@@ -205,8 +206,9 @@ def main() -> None:
             stats["evaluated_samples"] += 1
 
             formatted_prompt = args.prompt_template.format(prompt=str(prompt_text))
-            encoded = tokenizer(formatted_prompt, return_tensors="pt")
+            encoded = tokenizer(formatted_prompt, return_tensors="pt", return_attention_mask=True)
             input_ids = encoded["input_ids"].to(device)
+            attention_mask = encoded["attention_mask"].to(device)
 
             generation_kwargs = {
                 "max_new_tokens": args.max_new_tokens,
@@ -217,7 +219,7 @@ def main() -> None:
             }
 
             with torch.no_grad():
-                generated_ids = model.generate(input_ids=input_ids, **generation_kwargs)
+                generated_ids = model.generate(input_ids=input_ids, attention_mask=attention_mask, **generation_kwargs)
 
             if args.strip_prompt_from_response:
                 response_ids = generated_ids[0][input_ids.shape[1] :]
