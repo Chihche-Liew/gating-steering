@@ -1,3 +1,5 @@
 **/.doc/**
 **/.agent/**
 # **/artifacts/**
+**/.cache/**
+**/.ipynb_checkpoints/**

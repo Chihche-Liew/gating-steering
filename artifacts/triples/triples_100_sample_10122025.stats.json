@@ -1,0 +1,11 @@
+{
+  "dataset_name": "UW-Madison-Lee-Lab/MMLU-Pro-CoT-Eval",
+  "dataset_config": null,
+  "split": "test",
+  "model_name": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+  "total_samples": 153,
+  "evaluated_samples": 153,
+  "collected_triples": 100,
+  "skipped_no_prompt": 0,
+  "skipped_no_gold_answer": 0
+}
