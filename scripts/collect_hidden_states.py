@@ -11,10 +11,11 @@ import random
 from dataclasses import dataclass
 from itertools import zip_longest
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import numpy as np
 import torch
+import torch.nn.functional as F
 from Levenshtein import opcodes
 from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
@@ -219,20 +220,192 @@ def token_strings(tokenizer: AutoTokenizer, input_ids: torch.Tensor) -> List[str
     return tokens
 
 
-def align_tokens(
-    tokenizer: AutoTokenizer,
-    wrong_input: Dict[str, torch.Tensor],
-    right_input: Dict[str, torch.Tensor],
-) -> List[Tuple[int, int]]:
-    wrong_tokens = tokenizer.convert_ids_to_tokens(wrong_input["input_ids"][0])
-    right_tokens = tokenizer.convert_ids_to_tokens(right_input["input_ids"][0])
-
+def _align_tokens_text(wrong_tokens: List[str], right_tokens: List[str]) -> List[Tuple[int, int]]:
     alignment_opcodes = opcodes(wrong_tokens, right_tokens)
     matches: List[Tuple[int, int]] = []
     for tag, i1, i2, j1, j2 in alignment_opcodes:
         if tag == "equal":
             matches.extend(zip(range(i1, i2), range(j1, j2)))
     return matches
+
+
+def _cosine_distance_matrix(wrong_hidden: torch.Tensor, right_hidden: torch.Tensor) -> np.ndarray:
+    wrong_norm = F.normalize(wrong_hidden, p=2, dim=1)
+    right_norm = F.normalize(right_hidden, p=2, dim=1)
+    similarity = torch.matmul(wrong_norm, right_norm.T)
+    distances = 1.0 - similarity
+    return distances.cpu().numpy()
+
+
+def _hidden_alignment_dp(
+    wrong_hidden: torch.Tensor,
+    right_hidden: torch.Tensor,
+    max_shift: Optional[int] = None,
+    gap_penalty: Optional[float] = None,
+    distance_threshold: Optional[float] = None,
+) -> Tuple[List[Tuple[int, int]], Dict[str, Any]]:
+    if wrong_hidden.ndim != 2 or right_hidden.ndim != 2:
+        raise ValueError("Hidden states must be 2D tensors [seq_len, hidden_dim].")
+
+    distance_matrix = _cosine_distance_matrix(wrong_hidden, right_hidden)
+    if np.isnan(distance_matrix).any():
+        return [], {"strategy": "hidden_dp", "error": "NaN distances detected."}
+
+    n, m = distance_matrix.shape
+    if n == 0 or m == 0:
+        return [], {"strategy": "hidden_dp", "error": "Empty hidden state sequence."}
+
+    if gap_penalty is None:
+        gap_penalty = float(max(np.mean(distance_matrix), 1e-4))
+
+    if distance_threshold is None:
+        distance_threshold = float(np.mean(distance_matrix) + np.std(distance_matrix))
+
+    if max_shift is None:
+        max_shift = max(abs(n - m) + 5, int(0.2 * max(n, m)))
+
+    scores = np.full((n + 1, m + 1), np.inf, dtype=np.float64)
+    traceback = np.full((n + 1, m + 1), -1, dtype=np.int8)
+
+    scores[0, 0] = 0.0
+    for i in range(1, n + 1):
+        scores[i, 0] = scores[i - 1, 0] + gap_penalty
+        traceback[i, 0] = 1  # up
+    for j in range(1, m + 1):
+        scores[0, j] = scores[0, j - 1] + gap_penalty
+        traceback[0, j] = 2  # left
+
+    for i in range(1, n + 1):
+        i_idx = i - 1
+        for j in range(1, m + 1):
+            j_idx = j - 1
+            if abs(i_idx - j_idx) > max_shift:
+                match_cost = np.inf
+            else:
+                match_cost = scores[i - 1, j - 1] + distance_matrix[i_idx, j_idx]
+            delete_cost = scores[i - 1, j] + gap_penalty
+            insert_cost = scores[i, j - 1] + gap_penalty
+            best_cost = min(match_cost, delete_cost, insert_cost)
+
+            scores[i, j] = best_cost
+            if best_cost == match_cost:
+                traceback[i, j] = 0  # diagonal
+            elif best_cost == delete_cost:
+                traceback[i, j] = 1  # up
+            else:
+                traceback[i, j] = 2  # left
+
+    if not np.isfinite(scores[n, m]):
+        return [], {
+            "strategy": "hidden_dp",
+            "error": "Alignment score is infinite (path not found).",
+        }
+
+    matches: List[Tuple[int, int]] = []
+    matched_distances: List[float] = []
+    discarded = 0
+    gap_steps = 0
+
+    i, j = n, m
+    while i > 0 or j > 0:
+        direction = traceback[i, j]
+        if direction == 0 and i > 0 and j > 0:
+            i -= 1
+            j -= 1
+            dist_val = float(distance_matrix[i, j])
+            if dist_val <= distance_threshold:
+                matches.append((i, j))
+                matched_distances.append(dist_val)
+            else:
+                discarded += 1
+        elif direction == 1 and i > 0:
+            i -= 1
+            gap_steps += 1
+        elif direction == 2 and j > 0:
+            j -= 1
+            gap_steps += 1
+        else:
+            # Safety: if direction is invalid, break out to avoid infinite loop.
+            LOGGER.warning("Unexpected traceback direction %s at (%d, %d)", direction, i, j)
+            break
+
+    matches.reverse()
+    matched_distances.reverse()
+
+    total_steps = len(matches) + discarded + gap_steps
+    avg_distance = float(np.mean(matched_distances)) if matched_distances else None
+
+    metrics: Dict[str, Any] = {
+        "strategy": "hidden_dp",
+        "num_matches": len(matches),
+        "avg_distance": avg_distance,
+        "distance_threshold": float(distance_threshold),
+        "gap_steps": gap_steps,
+        "discarded_high_distance": discarded,
+        "total_steps": total_steps,
+        "gap_ratio": float(gap_steps / total_steps) if total_steps else None,
+        "score": float(scores[n, m]),
+        "sequence_lengths": {"wrong": n, "right": m},
+    }
+
+    return matches, metrics
+
+
+def _dp_quality_ok(metrics: Dict[str, Any]) -> bool:
+    if metrics.get("error"):
+        return False
+    num_matches = metrics.get("num_matches", 0)
+    if num_matches == 0:
+        return False
+    avg_distance = metrics.get("avg_distance")
+    if avg_distance is None:
+        return False
+    distance_threshold = metrics.get("distance_threshold")
+    if distance_threshold is not None and avg_distance > distance_threshold:
+        return False
+    gap_ratio = metrics.get("gap_ratio")
+    if gap_ratio is not None and gap_ratio > 0.6:
+        return False
+    return True
+
+
+def align_tokens(
+    wrong_tokens: List[str],
+    right_tokens: List[str],
+    wrong_hidden: torch.Tensor,
+    right_hidden: torch.Tensor,
+) -> Tuple[List[Tuple[int, int]], Dict[str, Any]]:
+    text_matches = _align_tokens_text(wrong_tokens, right_tokens)
+
+    try:
+        dp_matches, dp_metrics = _hidden_alignment_dp(wrong_hidden, right_hidden)
+    except Exception as exc:  # pragma: no cover - defensive guard
+        LOGGER.exception("Hidden-state DP alignment failed; falling back to text alignment.")
+        return text_matches, {
+            "strategy": "text_fallback",
+            "used_fallback": True,
+            "fallback_reason": f"exception: {exc}",
+            "num_matches": len(text_matches),
+        }
+
+    if _dp_quality_ok(dp_metrics):
+        dp_metrics.update({"strategy": "hidden_dp", "used_fallback": False})
+        return dp_matches, dp_metrics
+
+    dp_metrics.update({
+        "strategy": "text_fallback",
+        "used_fallback": True,
+        "fallback_reason": dp_metrics.get("error", "quality_check_failed"),
+        "num_matches": len(text_matches),
+        "fallback_matches": len(text_matches),
+    })
+    LOGGER.debug(
+        "DP alignment rejected (avg_dist=%s, gap_ratio=%s, matches=%s); using text alignment.",
+        dp_metrics.get("avg_distance"),
+        dp_metrics.get("gap_ratio"),
+        dp_metrics.get("num_matches"),
+    )
+    return text_matches, dp_metrics
 
 
 def subsample_pairs(pairs: List[Tuple[int, int]], max_samples: int, rng: random.Random) -> List[Tuple[int, int]]:
@@ -290,7 +463,13 @@ def save_scatter(points: np.ndarray, labels: np.ndarray, output_path: Path, titl
     plt.close()
 
 
-def save_alignment(alignment_path: Path, wrong_tokens: List[str], right_tokens: List[str], matches: List[Tuple[int, int]]) -> None:
+def save_alignment(
+    alignment_path: Path,
+    wrong_tokens: List[str],
+    right_tokens: List[str],
+    matches: List[Tuple[int, int]],
+    metadata: Optional[Dict[str, Any]] = None,
+) -> None:
     alignment_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "wrong_tokens": wrong_tokens,
@@ -300,6 +479,8 @@ def save_alignment(alignment_path: Path, wrong_tokens: List[str], right_tokens: 
             for wrong_idx, right_idx in matches
         ],
     }
+    if metadata:
+        payload["metadata"] = metadata
     alignment_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
@@ -384,7 +565,12 @@ def main() -> None:
 
         wrong_tokens = token_strings(tokenizer, wrong_inputs["input_ids"].squeeze(0))
         right_tokens = token_strings(tokenizer, right_inputs["input_ids"].squeeze(0))
-        matches = align_tokens(tokenizer, wrong_inputs, right_inputs)
+        matches, alignment_info = align_tokens(
+            wrong_tokens,
+            right_tokens,
+            wrong_hidden[probe_layer],
+            right_hidden[probe_layer],
+        )
 
         sample_dir = args.output_dir / triple.sample_id
         sample_dir.mkdir(parents=True, exist_ok=True)
@@ -394,7 +580,7 @@ def main() -> None:
             torch.save(tensor, sample_dir / f"right_layer{layer_id}.pt")
 
         alignment_path = args.alignment_dir / f"{triple.sample_id}.json"
-        save_alignment(alignment_path, wrong_tokens, right_tokens, matches)
+        save_alignment(alignment_path, wrong_tokens, right_tokens, matches, alignment_info)
 
         if len(probe_features) < args.probe_max_samples:
             layer_tensor_wrong = wrong_hidden[probe_layer]
