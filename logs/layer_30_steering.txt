@@ -1,0 +1,267 @@
+With steering: F
+results['with_steering']['correct']: 1
+Evaluating steering:   1%|▌                                                             | 1/100 [00:24<40:18, 24.43s/it]With steering: G
+results['with_steering']['correct']: 1
+Evaluating steering:   2%|█▏                                                            | 2/100 [00:45<36:16, 22.21s/it]With steering: H
+results['with_steering']['correct']: 1
+Evaluating steering:   3%|█▊                                                            | 3/100 [01:06<35:31, 21.98s/it]With steering: D
+results['with_steering']['correct']: 1
+Evaluating steering:   4%|██▍                                                           | 4/100 [01:21<30:37, 19.14s/it]With steering: B
+results['with_steering']['correct']: 1
+Evaluating steering:   5%|███                                                           | 5/100 [01:48<34:55, 22.06s/it]With steering: PV ≈((( (((((( (((((((( (((((((( (((((( (((((( (((((( ((((( (((((( (((((()(((((((((((((((((((((((((((((((( (((((((((((((((((((((((((( (((((((((((((((((((( ((((( (((((((((((((((((( (((((((( (((((((((((((((( (((((((( ((((( (((((((( ((( (((((((( ((((( (((((((( (((((((((( ((((((((((( (((((((( ((( ((((( (((((((( ((((((( ((((((((((((( (((((((((((((((((((((((((((( ((((((((((((((((((((( (((((((((((((((((((((( ((((( (((((((((((( (((((((((((( ((((( ((((( (((((((((( (((((((( ((((((((((((((((((((((((( (((((((((((((( (((((((((((( (((( ((((((((((((((((( (((((((( ((((((((( (((((((((((( ((((( (((((((((((((((( ((((((( ((((( (((((( ((((( ((((( (((((((( (((((((( (( (((((((((((( (((((( ((((((((((((((( ((((((((((((((( (((((((((((( ((( ((((((((((((((((((( ((((((((((((((((( ((((( ((((((((((((( ((((((((( ((((((((((((( ((((( (((((((((((((( ((((( (((((((((((( (( ((((((((((((((((((( ((((( (((((((((( ((((((((( (((((((( ((((( ((((((((((((((( (((((( (((((((( ((((((((((((((((( ((((((((((( ((((((((( (((((((((( ((((( ((((( ((((((((( ((((( (((((((( ((((((((((( ((((((( ((((((((((((((( ((((( ((((((( (((((((((((( (((((((( (((((((((((((( ((((( (((((( ((((((((( (((((( (((((((( (()(((((((((((((((((((((((((((((((((((((((((((-(((((((((((((((((((((-((-((-((-((-((-((-(-((-((-((-((-(-(-((-((-((-((-((((-((-((-((-((-(((-((-((-((-((-(((((-((-((-((-((-((((-((-((-((-((-((((((-((-((-((-((-((((((((((((((((((-((-((-((-((((((((-((-((-((-(((((((((-((-((-((-(((((-((-((-((-((((((-((((((-((-((-((((((-((((-((-((-((((((-(((((-((-((-((((((-(-((-((-((-(((((((((((-((-((-((-(((((((-((-((-(((((((-((-((-((-((((((((((-((-((-(((((([((((-((-((-((-((-[((((-((-((-((-(((([((((-((-((-((-((
+results['with_steering']['correct']: 1
+Evaluating steering:   6%|███▋                                                          | 6/100 [02:48<54:37, 34.87s/it]With steering: F
+results['with_steering']['correct']: 1
+Evaluating steering:   7%|████▎                                                         | 7/100 [03:14<49:24, 31.88s/it]With steering: I
+results['with_steering']['correct']: 1
+Evaluating steering:   8%|████▉                                                         | 8/100 [03:21<36:40, 23.91s/it]With steering: should
+results['with_steering']['correct']: 1
+Evaluating steering:   9%|█████▌                                                        | 9/100 [03:44<36:00, 23.75s/it]With steering: (((((((((((((((((((((((((((((((((( (((((((((((( (((((( (((((( ((((((((( (((((( (((((((((( (((((( (((((()(((((( (((((( (((((( ((((( (((((( (((((( (((( (((((( (((((( ((((((( (((((( (((((( (((((((( (((((( (((((((((( (((((( ((((((((( ((((( ((((((((( ((((((( (((((( ((((( ((((((( ((((((((( (((((((((( ((((((( ((((((( ((((((( (((((((( ((((((( ((((((((((( ((((((( (((((((((((((((((((((((((((((((( ((((((((((((((((((((( (((((((((((((((((((((( (((((((((((((((((((( ((((( (((((((((((((((((( (((((((( (((((((((((((((( (((((((( (((((((( ((((( (((((((( ((( ((((((((((((((((((( ((((((((((((((((( (((((((( (((((((((((( ((((((((( (((((((((((((((( ((((((( (((((((((((((( (((((((((((( ((((( ((((( ((((((((((((((( ((((((((((((((((( (((((((((((((( ((((((((([((((((((((((((((((((((((( ((((( (((((((((( (((((((( (((((((((((((((((((((( (((((((( ((((( (((((((((((((((((((((( ((((((((((( ((((((((((((((( (((((((((((( ((((( (((((((( (((((((((( ((((((((((( ((((((((( (((((((((((( (((((( (((((((((((()((((((((((((((((((((((( ((((( (((((((((((((
+results['with_steering']['correct']: 1
+Evaluating steering:  10%|██████                                                       | 10/100 [04:44<52:26, 34.97s/it]With steering: B
+results['with_steering']['correct']: 1
+Evaluating steering:  11%|██████▍                                                    | 11/100 [05:39<1:00:47, 40.98s/it]With steering: 237((-
+results['with_steering']['correct']: 1
+Evaluating steering:  12%|███████                                                    | 12/100 [06:39<1:08:30, 46.71s/it]With steering: A
+results['with_steering']['correct']: 1
+Evaluating steering:  13%|███████▋                                                   | 13/100 [07:09<1:00:47, 41.92s/it]With steering: D
+results['with_steering']['correct']: 1
+Evaluating steering:  14%|████████▌                                                    | 14/100 [07:32<51:35, 36.00s/it]With steering: - Upon further simplification upon division by 49, upon division upon division upon division upon upon upon upon upon upon division upon upon upon division upon division upondivision upon upon upon upon upondivision upon upon upondivision upondivision upon upon uponupon upon upon upon upon uponupon upondivision upon upon upon division upondivision upondivision upondivision uponupon upon upon upondivision uponupon upondivision upondivision upondivisio upon upon upon upon upondivisio uponupon upon upon uponupon uponupon upon upon upondivis upon upon upon upon uponUpon upon upon upon upon upon Upon upon upon upon upon uponDivision upon upon upon upon upon Division upon upon upon upon uponDIVISION upon upon upon upon upon DIVISION upon upon upon uponUponupon upon upon upon uponUponUpon upon upon upon uponUponDivision upon upon upon uponUpondivision upon upon upon uponUponDIVISION upon upon uponUponUponUponUponUponUponupon upon uponUponUponUponuponUponUponUponUponUpon uponUponUponUponUponuponUponuponUponUponUponuponUpon uponUponUponUponuponuponUponUponUponUponuponuponuponUponUponUponuponupon uponUponUponUponUpon uponuponUponUponUponUpon upon uponUponUponUpon uponUponuponUponUponUpon uponUpon uponUponUponUpon uponuponuponUponUponUpon uponupon uponUponUponUponupon uponUponUponUpon upon uponuponUponUponUponupon uponuponUponUponUpon upon upon uponUponUponuponUponUponuponUponUpon uponUponUponuponUponuponuponUponUponuponUponupon uponUponUponuponUpon uponuponUponUponuponUpon upon uponUponUponuponuponUponuponUponUponuponuponUpon uponUponUponuponuponuponuponUponUponuponuponupon uponUponUponuponupon uponuponUponUponuponupon upon uponUponUponupon uponUponuponUponUponupon uponUpon uponUponUponupon uponuponuponUponUponupon uponupon uponUponUponupon upon uponuponUponUponupon upon upon uponUponUpon UponuponUponUponUponUpon UponuponUponuponUponUpon uponuponUponuponUponUpon UponuponUpon uponUponUpon uponUponUpon uponuponUpon uponUponUpon UponuponuponUponUponUpon UponuponuponuponUponUpon uponUponuponuponUponUpon Uponuponupon UponuponUponUponUponupon UponuponUponUponuponUpon UponuponUponUponuponupon UponuponUponuponUponuponUponuponuponuponUponuponUponupon UponuponUponuponuponUponuponuponUpon UponuponUponuponuponuponuponuponUponuponuponupon UponuponUpon uponUponuponUponuponUpon UponuponuponUponuponUpon UponUponUponUponUponUpon UponUponUponUponuponUpon UponUponuponUponUponUpon UponUponuponUponuponUpon uponUponuponuponuponUpon UponuponuponuponuponUpon UponUponUponuponUponUpon UponUponUponuponuponUpon UponUponuponuponUponUpon uponuponuponuponUponUpon UponUponuponuponuponUpon uponUponupon UponuponUpon UponuponUpon UponUponUpon UponUponUpon UponuponUpon Uponuponupon UponUponUponUponUpon Upon uponUponUponUponUpon Upon UponUponUponUponUponupon UponUponUponUpon UponUpon UponUponUponUpon Uponupon UponUponUponUponupon Upon UponUponUponUpon Upon UponuponUponUponUpon Upon Upon UponUponUponUponuponupon UponUponUpon UponUpon UponuponUponUpon UponUpon Upon UponUponUpon UponUponupon UponUponUpon Uponupon UponuponUponUpon Uponupon Upon UponUponUpon Uponuponupon uponUponUpon UponUponUpon uponUponUpon UponUpon Upon uponUponUpon UponUponupon uponUponUpon Uponupon Upon uponUponUponUpon UponUpon uponUponUponUpon Uponupon uponUponUponUpon Upon Upon uponUponUponUponupon Upon uponUponUpon Uponupon uponuponUponUpon UponUpon upon
+results['with_steering']['correct']: 1
+Evaluating steering:  15%|████████▊                                                  | 15/100 [08:31<1:01:03, 43.10s/it]With steering: D
+results['with_steering']['correct']: 1
+Evaluating steering:  16%|█████████▊                                                   | 16/100 [08:47<48:42, 34.79s/it]With steering: G
+results['with_steering']['correct']: 1
+Evaluating steering:  17%|██████████▎                                                  | 17/100 [09:03<40:14, 29.09s/it]With steering: A
+results['with_steering']['correct']: 1
+Evaluating steering:  18%|██████████▉                                                  | 18/100 [09:24<36:32, 26.74s/it]With steering: C
+results['with_steering']['correct']: 1
+Evaluating steering:  19%|███████████▌                                                 | 19/100 [09:55<37:41, 27.92s/it]With steering: A
+results['with_steering']['correct']: 2
+Evaluating steering:  20%|████████████▏                                                | 20/100 [10:11<32:44, 24.55s/it]With steering: ]
+results['with_steering']['correct']: 2
+Evaluating steering:  21%|████████████▊                                                | 21/100 [11:11<46:11, 35.08s/it]With steering: B
+results['with_steering']['correct']: 3
+Evaluating steering:  22%|█████████████▍                                               | 22/100 [11:35<41:13, 31.71s/it]With steering: depth_embedded_free=((block_final_embeded_initial)/(block_final_embeded_embeded_Em_Em_Em_Em_Em_EMBED_Em_Em_Em_Em_EmEMBED_Em_Em_Em_Em_EmEMBED_Em_Em_Em_EmEmbedEMBED_Em_Em_EmEmbed_EmEMBED_Em_EmEmbed_Em_EmEmbed_Em_EmEmbedded_Em_EmEmbed_Em_Em Embed_Em_EmEmbed_Em_EmEMBED_Em
+results['with_steering']['correct']: 3
+Evaluating steering:  23%|██████████████                                               | 23/100 [12:35<51:29, 40.13s/it]With steering: Step27
+results['with_steering']['correct']: 3
+Evaluating steering:  24%|██████████████▋                                              | 24/100 [13:34<58:20, 46.06s/it]With steering: sec)(((((-((-((-((-((-(-(((-((-((-((-((-)(((((-((-((-((-(((sec
+results['with_steering']['correct']: 3
+Evaluating steering:  25%|██████████████▊                                            | 25/100 [14:34<1:02:44, 50.20s/it]With steering: C
+results['with_steering']['correct']: 4
+Evaluating steering:  26%|███████████████▊                                             | 26/100 [14:45<47:26, 38.46s/it]With steering: Step65: Determine composition
+results['with_steering']['correct']: 4
+Evaluating steering:  27%|████████████████▍                                            | 27/100 [15:45<54:36, 44.89s/it]With steering: F
+results['with_steering']['correct']: 4
+Evaluating steering:  28%|█████████████████                                            | 28/100 [16:11<47:00, 39.18s/it]With steering: ((sqrt{10(
+results['with_steering']['correct']: 4
+Evaluating steering:  29%|█████████████████▋                                           | 29/100 [17:11<53:39, 45.35s/it]With steering: x
+results['with_steering']['correct']: 4
+Evaluating steering:  30%|██████████████████▎                                          | 30/100 [18:11<57:59, 49.70s/it]With steering: C
+results['with_steering']['correct']: 5
+Evaluating steering:  31%|██████████████████▉                                          | 31/100 [18:30<46:46, 40.68s/it]With steering: J
+results['with_steering']['correct']: 6
+Evaluating steering:  32%|███████████████████▌                                         | 32/100 [19:05<44:05, 38.91s/it]With steering: B
+results['with_steering']['correct']: 6
+Evaluating steering:  33%|████████████████████▏                                        | 33/100 [19:19<35:10, 31.50s/it]With steering: E
+results['with_steering']['correct']: 7
+Evaluating steering:  34%|████████████████████▋                                        | 34/100 [19:43<32:00, 29.10s/it]With steering: D
+results['with_steering']['correct']: 7
+Evaluating steering:  35%|█████████████████████▎                                       | 35/100 [20:04<29:05, 26.86s/it]With steering: I
+results['with_steering']['correct']: 7
+Evaluating steering:  36%|█████████████████████▉                                       | 36/100 [21:04<39:13, 36.77s/it]With steering: Based upon electronegativity differences C—H bond polarity determination table electronegativity differences are lesser polarity bond determination table electronegativty differences lesser polarity bond determination electronegativity differences electronegativity differences bond polarity determination electronegativity electronegativity electrnegrativity electronegativity differences determination electronegativity determination electronegativity bond electronegativity electrnegativity electronegativity determination bond electronegativity determination lesser electronegativity determination determination electronegativity lesser electronegativity electragnativity electronegativity bond determination electronegativty determination electronegativity polarity determination electronegativ determination electronegativity bonded electronegativity determination bonded electronegativity electrnonnegativity electronegativ determination bond electronegativ determination determination electronegativ bond determination electronegatvity determination electronegativity determinatio electronegativity determination polarity determination electronegatvit determination electronegativitybond determination electronegativitydeterminatiion electronegativity determinationbond determination electronegativiti determination electronegativityDeterminatiion electronegativ determinationbond determination electronegrativity determination electronegativ determinatiion electronegatviti determination electronegativi determination electronegativity Determinatiion electronegati determination electronegativDeterminatiion electronegrativity determination bond determination electronegati determination bond determination electronegrativity bond determination electronegrativ determination electronegativ Determinatiion electronegrativ determination bond determination electronegre determination bond determination electronegro determination bond determination electrone determination bond determination electrone determinatiion bond determination electrone determination electrone determination bond electrone determination bond determination bond determination bond determination electrone bond determination bond determination bond bond determination bond determination bond electrone determination electrone bond determination electrone determination determination bond determination bond determination determination bond determination bond bond bond determination bond determination determination determination bond determination bond electr determination bond determination bond determinationbond determination bond determination bond determinationBond determination bond determination bond determination Bond determination bond determination bond determinationDeterminatiion bond determination bond determination bondDeterminatiion bond determinationbond determination bondDeterminatiionbond determination bond determinationbond determinationbond determination
+results['with_steering']['correct']: 7
+Evaluating steering:  37%|██████████████████████▌                                      | 37/100 [22:04<45:47, 43.61s/it]With steering: D
+results['with_steering']['correct']: 7
+Evaluating steering:  38%|███████████████████████▏                                     | 38/100 [22:19<36:08, 34.98s/it]With steering: BEGIN
+results['with_steering']['correct']: 7
+Evaluating steering:  39%|███████████████████████▊                                     | 39/100 [23:18<43:06, 42.40s/it]With steering: B
+results['with_steering']['correct']: 7
+Evaluating steering:  40%|████████████████████████▍                                    | 40/100 [23:34<34:29, 34.48s/it]With steering: c
+results['with_steering']['correct']: 7
+Evaluating steering:  41%|█████████████████████████                                    | 41/100 [24:34<41:22, 42.07s/it]With steering: b
+results['with_steering']['correct']: 7
+Evaluating steering:  42%|█████████████████████████▌                                   | 42/100 [24:51<33:13, 34.37s/it]With steering: G
+results['with_steering']['correct']: 7
+Evaluating steering:  43%|██████████████████████████▏                                  | 43/100 [25:06<27:15, 28.70s/it]With steering: E
+results['with_steering']['correct']: 7
+Evaluating steering:  44%|██████████████████████████▊                                  | 44/100 [25:20<22:42, 24.32s/it]With steering: C
+results['with_steering']['correct']: 7
+Evaluating steering:  45%|███████████████████████████▍                                 | 45/100 [25:34<19:22, 21.13s/it]With steering: G
+results['with_steering']['correct']: 7
+Evaluating steering:  46%|████████████████████████████                                 | 46/100 [26:00<20:24, 22.67s/it]With steering: C
+results['with_steering']['correct']: 7
+Evaluating steering:  47%|████████████████████████████▋                                | 47/100 [26:15<18:02, 20.42s/it]With steering: C
+results['with_steering']['correct']: 7
+Evaluating steering:  48%|█████████████████████████████▎                               | 48/100 [26:39<18:31, 21.37s/it]With steering: A
+results['with_steering']['correct']: 7
+Evaluating steering:  49%|█████████████████████████████▉                               | 49/100 [26:52<15:55, 18.74s/it]With steering: PV today = (((((((((((
+results['with_steering']['correct']: 7
+Evaluating steering:  50%|██████████████████████████████▌                              | 50/100 [27:51<25:50, 31.01s/it]With steering: B
+results['with_steering']['correct']: 7
+Evaluating steering:  51%|███████████████████████████████                              | 51/100 [28:30<27:09, 33.26s/it]With steering: usage Stephan Stephan Stephanusage StephanUsage Stephan StephanUsage Stephan StephanUsageUsage StephanUsage Stephan StephanUsageusage StephanUsage Stephan
+results['with_steering']['correct']: 7
+Evaluating steering:  52%|███████████████████████████████▋                             | 52/100 [29:29<32:58, 41.21s/it]With steering: s^2=(-((-((sStep39:Notice s^2]=((-((-((sStep40:Notice s^2]=-((-((sStep41:Notice s^2=-((-((sStep42:Notice s^2 Steph43:Notice s^2 Stephan44Step45Step46Step47Step48Step49Step50Step51Step52Step53Step54Step55Step56Step57Step58Step59Step60Step61Step62Step63Step64Step65Step66Step67Step68Step69Step70Step71Step72Step73Step74Step75Step76Step77Step78Step79Step80Step81Step82Step83Step84Step85Step86Step87Step88Step89Step90Step91Step92Step93Step94Step95Step96Step97Step98Step99Step100Step101Step102Step103Step104Step105Step106Step107Step108Step109Step110Step111Step112Step113Step114Step115Step116Step117Step118Step119Step120Step121Step122Step123Step124Step125Step126Step127Step128Step129Step130Step131Step132Step133Step134Step135Step136Step137Step138Step139Step140Step141Step142Step143Step144Step145Step146Step147Step148Step149Step150Step151Step152Step153Step154Step155Step156Step157Step158Step159Step160Step161Step162Step163Step164Step165Step166Step167Step168Step169Step170Step171Step172Step173Step174Step175Step176Step177Step178Step179Step180Step181Step182Step183Step184Step185Step186Step187Step188Step189Step190Step191Step192Step193Step
+results['with_steering']['correct']: 7
+Evaluating steering:  53%|████████████████████████████████▎                            | 53/100 [30:29<36:39, 46.79s/it]With steering: C
+results['with_steering']['correct']: 7
+Evaluating steering:  54%|████████████████████████████████▉                            | 54/100 [30:49<29:39, 38.67s/it]With steering: D
+results['with_steering']['correct']: 7
+Evaluating steering:  55%|█████████████████████████████████▌                           | 55/100 [31:13<25:41, 34.25s/it]With steering: I
+results['with_steering']['correct']: 7
+Evaluating steering:  56%|██████████████████████████████████▏                          | 56/100 [31:38<23:12, 31.65s/it]With steering: I
+results['with_steering']['correct']: 8
+Evaluating steering:  57%|██████████████████████████████████▊                          | 57/100 [31:55<19:27, 27.15s/it]With steering: D
+results['with_steering']['correct']: 8
+Evaluating steering:  58%|███████████████████████████████████▍                         | 58/100 [32:17<17:58, 25.67s/it]With steering: F
+results['with_steering']['correct']: 9
+Evaluating steering:  59%|███████████████████████████████████▉                         | 59/100 [32:23<13:24, 19.63s/it]With steering: D
+results['with_steering']['correct']: 9
+Evaluating steering:  60%|████████████████████████████████████▌                        | 60/100 [32:57<15:55, 23.88s/it]With steering: J
+results['with_steering']['correct']: 9
+Evaluating steering:  61%|█████████████████████████████████████▏                       | 61/100 [33:22<15:43, 24.18s/it]With steering: ((((((((( (((((( (((((( ((((((((( (((((( (((((((( (((((( (((((( ((((( (((((( (((((()(((((( (((((( (((((( (((( (((((( (((((( ((((( (((((( (((((( ((((((( (((((( (((((( (((
+results['with_steering']['correct']: 9
+Evaluating steering:  62%|█████████████████████████████████████▊                       | 62/100 [34:21<22:04, 34.86s/it]With steering: C
+results['with_steering']['correct']: 9
+Evaluating steering:  63%|██████████████████████████████████████▍                      | 63/100 [34:36<17:49, 28.90s/it]With steering: ]
+results['with_steering']['correct']: 9
+Evaluating steering:  64%|███████████████████████████████████████                      | 64/100 [35:36<22:54, 38.17s/it]With steering: G
+results['with_steering']['correct']: 10
+Evaluating steering:  65%|███████████████████████████████████████▋                     | 65/100 [35:50<18:00, 30.88s/it]With steering: Determin
+results['with_steering']['correct']: 10
+Evaluating steering:  66%|████████████████████████████████████████▎                    | 66/100 [36:50<22:28, 39.66s/it]With steering: H
+results['with_steering']['correct']: 11
+Evaluating steering:  67%|████████████████████████████████████████▊                    | 67/100 [37:21<20:25, 37.12s/it]With steering: H
+results['with_steering']['correct']: 12
+Evaluating steering:  68%|█████████████████████████████████████████▍                   | 68/100 [37:41<17:02, 31.95s/it]With steering: ((μ_02π2((l^32π)(((l^32π)(((((μ_02π(((l^32π)((((((μ_02π((((((μ_02π(((((l^32π((((((μ_0((((((l^32π(((((μ_02π(((((((((l^32((((((μ_02((((((l^32((((((((μ_02((((((((l^32)((((((μ_02((((((((((((l^3)((((((μ_02(((((((((l^((((((μ_02(((((((l^(((((((((μ_02((((((((l^(((((( ((((((μ_02((( ((((((l^((( ((((((μ_0((( ((((((l^((((( ((((((μ_((((( ((((((l^(((((((μ_((((( (((((l^((((((( μ_((((( ((((((((l^((((((( (((((l^((( ((((((((μ_(((((((( ((((((l^)((( ((((((μ_(( (((((( ((((((l^ ((((((μ_(( ((((( ((((((l^ (((( ((((((μ_((((((( ((((((l ((((((μ_(([((((( ((((((l^ (((((μ_(((((((((( ((((((l (((((μ_((((((((( (((((((((l ((((((μ ((((((((( (((((((((l (((((μ (((((((((((( ((((((((((((l (((((((((μ ((((((((( (((((((((((l ((((((((μ (((((((((((((( (((((((((((((((l ((((((((((μ (((((((((((((((( (((((((((((( ((((((((((μ (((((((((( ((((((((((μ ((((( (((((((((( ((((((((((((μ (((((((((( ((((( (((((((((((( (((((((((((( ((((( (((((((((( ((((( ((((( (((((((((((((((( (((((((((( (((((((( ((((((((( (((((((((((( (((((((( (((((((( ((((( (((((((( (((((( (((((((( ((()(((((( (((((((((( (((((( (((((((((( ((()(((((( (((((((( (((((-((( (((((((((( (((((-((( (((((-((( (((((((( ((((-((( (((((-((( (((((( (((((-((( ((((-((( (((((((( ((((-(((( (((((-((( ((((-(((( (((((((( (((-(((( (((((-((( ((()(((((( (((((-((( (((((&quot;((( (((((( (((((( ((((((((( (((((( (((((()(((((( ((((((
+results['with_steering']['correct']: 12
+Evaluating steering:  69%|██████████████████████████████████████████                   | 69/100 [38:41<20:49, 40.29s/it]With steering: E
+results['with_steering']['correct']: 12
+Evaluating steering:  70%|██████████████████████████████████████████▋                  | 70/100 [39:41<23:05, 46.20s/it]With steering: D
+results['with_steering']['correct']: 12
+Evaluating steering:  71%|███████████████████████████████████████████▎                 | 71/100 [40:00<18:27, 38.17s/it]With steering: D
+results['with_steering']['correct']: 12
+Evaluating steering:  72%|███████████████████████████████████████████▉                 | 72/100 [40:17<14:43, 31.55s/it]With steering: J
+results['with_steering']['correct']: 12
+Evaluating steering:  73%|████████████████████████████████████████████▌                | 73/100 [40:36<12:30, 27.79s/it]With steering: B
+results['with_steering']['correct']: 12
+Evaluating steering:  74%|█████████████████████████████████████████████▏               | 74/100 [41:34<16:04, 37.10s/it]With steering: E
+results['with_steering']['correct']: 12
+Evaluating steering:  75%|█████████████████████████████████████████████▊               | 75/100 [42:00<13:59, 33.59s/it]With steering: G
+results['with_steering']['correct']: 13
+Evaluating steering:  76%|██████████████████████████████████████████████▎              | 76/100 [42:24<12:17, 30.73s/it]With steering: D
+results['with_steering']['correct']: 14
+Evaluating steering:  77%|██████████████████████████████████████████████▉              | 77/100 [42:41<10:12, 26.64s/it]With steering: C
+results['with_steering']['correct']: 14
+Evaluating steering:  78%|███████████████████████████████████████████████▌             | 78/100 [43:00<08:55, 24.36s/it]With steering: F
+results['with_steering']['correct']: 14
+Evaluating steering:  79%|████████████████████████████████████████████████▏            | 79/100 [43:13<07:22, 21.05s/it]With steering: I
+results['with_steering']['correct']: 14
+Evaluating steering:  80%|████████████████████████████████████████████████▊            | 80/100 [43:26<06:12, 18.63s/it]With steering: B
+results['with_steering']['correct']: 14
+Evaluating steering:  81%|█████████████████████████████████████████████████▍           | 81/100 [43:58<07:06, 22.47s/it]With steering: B
+results['with_steering']['correct']: 14
+Evaluating steering:  82%|██████████████████████████████████████████████████           | 82/100 [44:25<07:10, 23.90s/it]With steering: ((-
+results['with_steering']['correct']: 14
+Evaluating steering:  83%|██████████████████████████████████████████████████▋          | 83/100 [45:25<09:48, 34.62s/it]With steering: F
+results['with_steering']['correct']: 14
+Evaluating steering:  84%|███████████████████████████████████████████████████▏         | 84/100 [45:54<08:47, 32.97s/it]With steering: a
+results['with_steering']['correct']: 14
+Evaluating steering:  85%|███████████████████████████████████████████████████▊         | 85/100 [46:53<10:14, 40.99s/it]With steering: F
+results['with_steering']['correct']: 14
+Evaluating steering:  86%|████████████████████████████████████████████████████▍        | 86/100 [47:12<07:59, 34.26s/it]With steering: I
+results['with_steering']['correct']: 14
+Evaluating steering:  87%|█████████████████████████████████████████████████████        | 87/100 [47:21<05:48, 26.81s/it]With steering: A
+results['with_steering']['correct']: 14
+Evaluating steering:  88%|█████████████████████████████████████████████████████▋       | 88/100 [47:35<04:34, 22.87s/it]With steering: ζ_translationalCH_4=((((((((((((((((()(((((((((((((((((( ((((( (((((((((((( (((((((((((( ((((( ((((( (((((((((( ((((((((((((((( (((((((( ((((((((
+results['with_steering']['correct']: 14
+Evaluating steering:  89%|██████████████████████████████████████████████████████▎      | 89/100 [48:35<06:14, 34.05s/it]With steering: D
+results['with_steering']['correct']: 15
+Evaluating steering:  90%|██████████████████████████████████████████████████████▉      | 90/100 [48:47<04:33, 27.31s/it]With steering: A
+results['with_steering']['correct']: 15
+Evaluating steering:  91%|███████████████████████████████████████████████████████▌     | 91/100 [49:09<03:51, 25.74s/it]With steering: C
+results['with_steering']['correct']: 15
+Evaluating steering:  92%|████████████████████████████████████████████████████████     | 92/100 [49:29<03:11, 24.00s/it]With steering: ((-(-68.496)))
+results['with_steering']['correct']: 15
+Evaluating steering:  93%|████████████████████████████████████████████████████████▋    | 93/100 [50:28<04:02, 34.70s/it]With steering: _=177
+results['with_steering']['correct']: 15
+Evaluating steering:  94%|█████████████████████████████████████████████████████████▎   | 94/100 [51:28<04:13, 42.29s/it]With steering: F
+results['with_steering']['correct']: 15
+Evaluating steering:  95%|█████████████████████████████████████████████████████████▉   | 95/100 [51:44<02:50, 34.16s/it]With steering: D
+results['with_steering']['correct']: 15
+Evaluating steering:  96%|██████████████████████████████████████████████████████████▌  | 96/100 [51:56<01:50, 27.71s/it]With steering: C
+results['with_steering']['correct']: 16
+Evaluating steering:  97%|███████████████████████████████████████████████████████████▏ | 97/100 [52:10<01:10, 23.51s/it]With steering: I
+results['with_steering']['correct']: 17
+Evaluating steering:  98%|███████████████████████████████████████████████████████████▊ | 98/100 [52:46<00:54, 27.25s/it]With steering: E
+results['with_steering']['correct']: 17
+Evaluating steering:  99%|████████████████████████████████████████████████████████████▍| 99/100 [53:00<00:23, 23.23s/it]With steering: b
+results['with_steering']['correct']: 17
+Evaluating steering: 100%|████████████████████████████████████████████████████████████| 100/100 [53:14<00:00, 31.95s/it]
+2025-11-10 14:55:35,874 | INFO | Saved evaluation results to artifacts/steering_evaluation/steering_evaluation_results.json
+2025-11-10 14:55:35,875 | INFO | ============================================================
+2025-11-10 14:55:35,875 | INFO | Steering Evaluation Results
+2025-11-10 14:55:35,875 | INFO | ============================================================
+2025-11-10 14:55:35,875 | INFO | Total triples evaluated: 100
+2025-11-10 14:55:35,875 | INFO |
+2025-11-10 14:55:35,875 | INFO | Without steering (from provided baseline):
+2025-11-10 14:55:35,875 | INFO |   Correct: 8
+2025-11-10 14:55:35,875 | INFO |   Incorrect: 92
+2025-11-10 14:55:35,875 | INFO |   Accuracy: 8.00%
+2025-11-10 14:55:35,875 | INFO |
+2025-11-10 14:55:35,875 | INFO | With steering (coefficient=1.00):
+2025-11-10 14:55:35,875 | INFO |   Correct: 17
+2025-11-10 14:55:35,875 | INFO |   Incorrect: 83
+2025-11-10 14:55:35,875 | INFO |   Accuracy: 17.00%
+2025-11-10 14:55:35,875 | INFO |
+2025-11-10 14:55:35,875 | INFO | Accuracy change (vs. baseline): +9.00%
+2025-11-10 14:55:35,875 | INFO | (Improvements/degradations not tracked when baseline is skipped)
+2025-11-10 14:55:35,875 | INFO | ============================================================
+Steering evaluation complete. Results saved to artifacts/steering_evaluation
+=== Step 8: Comparing embeddings with and without steering ===
+Comparing embeddings for layer 30...
+/u/b/d/bdeka/miniconda3/envs/steering/lib/python3.10/site-packages/transformers/utils/hub.py:127: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2025-11-10 14:55:48,407 | INFO | Loaded 100 triples for comparison
+2025-11-10 14:55:48,408 | INFO | Loaded steering vector for layer 30 (shape: (4096,), norm: 32.6875)
+2025-11-10 14:55:48,682 | INFO | Loading model meta-llama/Llama-3.1-8B-Instruct on cuda with dtype torch.float16
+Downloading shards: 100%|███████████████████████████████████████████████████████████████| 4/4 [00:00<00:00, 1311.13it/s]
+Loading checkpoint shards: 100%|██████████████████████████████████████████████████████████| 4/4 [00:06<00:00,  1.75s/it]
+2025-11-10 14:55:58,267 | INFO | Collecting correct embeddings (prompt + correct_chain)...
+Collecting hidden states: 100%|███████████████████████████████████████████████████████| 100/100 [00:39<00:00,  2.53it/s]
+2025-11-10 14:56:37,833 | INFO | Collected 100 correct embeddings (shape: (100, 4096))
+2025-11-10 14:56:37,833 | INFO | Collecting wrong embeddings without steering (prompt only)...
+Collecting hidden states: 100%|███████████████████████████████████████████████████████| 100/100 [00:18<00:00,  5.32it/s]
+2025-11-10 14:56:56,635 | INFO | Collected 100 wrong embeddings without steering (shape: (100, 4096))
+2025-11-10 14:56:56,635 | INFO | Collecting wrong embeddings with steering (simulated by adding steering vector)...
+Collecting hidden states: 100%|███████████████████████████████████████████████████████| 100/100 [00:18<00:00,  5.29it/s]
+2025-11-10 14:57:15,527 | INFO | Collected 100 wrong embeddings with steering (shape: (100, 4096))
+2025-11-10 14:57:15,575 | INFO | Shift statistics:
+2025-11-10 14:57:15,575 | INFO |   Steering shift - Mean L2: 32.6875 ± 0.0000
+2025-11-10 14:57:15,575 | INFO |   Distance to correct (before) - Mean L2: 20.0625 ± 4.1445
+2025-11-10 14:57:15,575 | INFO |   Distance to correct (after) - Mean L2: 38.4062 ± 2.5000
+2025-11-10 14:57:15,575 | INFO |   Improvement - Mean L2 reduction: -18.3594
+2025-11-10 14:57:15,576 | INFO |   Improvement - Mean cosine improvement: -0.2750
+2025-11-10 14:57:15,619 | INFO | Saved statistics to reports/steering_embedding_comparison/layer30_shift_statistics.json
+2025-11-10 14:57:15,619 | INFO | Creating visualizations...
+2025-11-10 14:57:16,616 | INFO | Saved comparison plot to reports/steering_embedding_comparison/layer30_pca_comparison.png
+2025-11-10 14:57:17,426 | INFO | Saved overlay plot to reports/steering_embedding_comparison/layer30_pca_overlay.png
+/u/b/d/bdeka/miniconda3/envs/steering/lib/python3.10/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+/u/b/d/bdeka/miniconda3/envs/steering/lib/python3.10/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+  warnings.warn(problem)
+2025-11-10 14:57:27,650 | INFO | Saved comparison plot to reports/steering_embedding_comparison/layer30_umap_comparison.png
+/u/b/d/bdeka/miniconda3/envs/steering/lib/python3.10/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+2025-11-10 14:57:29,379 | INFO | Saved overlay plot to reports/steering_embedding_comparison/layer30_umap_overlay.png
+2025-11-10 14:57:29,379 | INFO | All visualizations saved to reports/steering_embedding_comparison
+Embedding comparison complete. Results saved to reports/steering_embedding_comparison
+
+=== Done! ===
+Results:
+  - Triples: artifacts/triples/triples_small.jsonl
+  - Hidden states: artifacts/hidden_states/
+  - Alignments: artifacts/alignments/
+  - Probe data: artifacts/probe_data/
+./run.bash: line 257: ANALYSIS_OUTPUT: unbound variable

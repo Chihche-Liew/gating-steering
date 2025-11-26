@@ -1,5 +1,10 @@
 **/.doc/**
 **/.agent/**
-# **/artifacts/**
-**/.cache/**
+**/artifacts/*
+!**/artifacts/manual_review/
+!**/artifacts/triples/
+.cache
 **/.ipynb_checkpoints/**
+*.
+**/__pycache__
+/README

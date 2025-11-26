@@ -1,0 +1,113 @@
+Installing requirements...
+=== Step 1: Skipping triple generation (file exists: artifacts/triples/triples_small.jsonl) ===
+To regenerate, delete the file and rerun.
+=== Step 2: Capturing hidden states ===
+/u/c/h/cha/anaconda3/envs/steering/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2025-10-17 23:15:05,708 | INFO | Target layers for hidden state capture: [28]
+2025-10-17 23:15:05,898 | INFO | Loading model meta-llama/Llama-3.1-8B-Instruct on cuda with dtype torch.float16
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:02<00:06,  2.20s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:04<00:04,  2.23s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:06<00:02,  2.22s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:07<00:00,  1.56s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:07<00:00,  1.80s/it]
+Capturing hidden states:   0%|          | 0/100 [00:00<?, ?it/s]Capturing hidden states:   1%|          | 1/100 [00:11<18:21, 11.12s/it]Capturing hidden states:   2%|▏         | 2/100 [00:12<08:57,  5.49s/it]Capturing hidden states:   3%|▎         | 3/100 [00:14<06:30,  4.03s/it]Capturing hidden states:   4%|▍         | 4/100 [00:15<04:31,  2.83s/it]Capturing hidden states:   5%|▌         | 5/100 [00:17<03:39,  2.31s/it]Capturing hidden states:   6%|▌         | 6/100 [00:19<03:28,  2.22s/it]Capturing hidden states:   7%|▋         | 7/100 [00:20<02:47,  1.80s/it]Capturing hidden states:   8%|▊         | 8/100 [00:21<02:15,  1.47s/it]Capturing hidden states:   9%|▉         | 9/100 [00:23<02:26,  1.61s/it]Capturing hidden states:  10%|█         | 10/100 [00:26<03:21,  2.24s/it]Capturing hidden states:  11%|█         | 11/100 [00:28<03:08,  2.12s/it]Capturing hidden states:  12%|█▏        | 12/100 [00:32<03:44,  2.55s/it]Capturing hidden states:  13%|█▎        | 13/100 [00:33<03:09,  2.18s/it]Capturing hidden states:  14%|█▍        | 14/100 [00:34<02:34,  1.80s/it]Capturing hidden states:  15%|█▌        | 15/100 [00:36<02:52,  2.03s/it]Capturing hidden states:  16%|█▌        | 16/100 [00:37<02:18,  1.65s/it]Capturing hidden states:  17%|█▋        | 17/100 [00:38<01:55,  1.39s/it]Capturing hidden states:  18%|█▊        | 18/100 [00:40<02:17,  1.67s/it]Capturing hidden states:  19%|█▉        | 19/100 [00:42<02:06,  1.57s/it]Capturing hidden states:  20%|██        | 20/100 [00:42<01:47,  1.35s/it]Capturing hidden states:  21%|██        | 21/100 [00:45<02:05,  1.59s/it]Capturing hidden states:  22%|██▏       | 22/100 [00:45<01:42,  1.31s/it]Capturing hidden states:  23%|██▎       | 23/100 [00:47<01:51,  1.45s/it]Capturing hidden states:  24%|██▍       | 24/100 [00:50<02:17,  1.81s/it]Capturing hidden states:  25%|██▌       | 25/100 [00:52<02:37,  2.10s/it]Capturing hidden states:  26%|██▌       | 26/100 [00:54<02:32,  2.06s/it]Capturing hidden states:  27%|██▋       | 27/100 [00:57<02:46,  2.28s/it]Capturing hidden states:  28%|██▊       | 28/100 [00:59<02:38,  2.20s/it]Capturing hidden states:  29%|██▉       | 29/100 [01:01<02:23,  2.03s/it]Capturing hidden states:  30%|███       | 30/100 [01:04<02:46,  2.37s/it]Capturing hidden states:  31%|███       | 31/100 [01:05<02:19,  2.02s/it]Capturing hidden states:  32%|███▏      | 32/100 [01:12<03:52,  3.42s/it]Capturing hidden states:  33%|███▎      | 33/100 [01:14<03:20,  2.99s/it]Capturing hidden states:  34%|███▍      | 34/100 [01:15<02:44,  2.49s/it]Capturing hidden states:  35%|███▌      | 35/100 [01:18<02:47,  2.57s/it]Capturing hidden states:  36%|███▌      | 36/100 [01:21<02:50,  2.66s/it]Capturing hidden states:  37%|███▋      | 37/100 [01:22<02:18,  2.20s/it]Capturing hidden states:  38%|███▊      | 38/100 [01:23<02:00,  1.94s/it]Capturing hidden states:  39%|███▉      | 39/100 [01:25<01:52,  1.84s/it]Capturing hidden states:  40%|████      | 40/100 [01:26<01:41,  1.70s/it]Capturing hidden states:  41%|████      | 41/100 [01:27<01:30,  1.54s/it]Capturing hidden states:  42%|████▏     | 42/100 [01:28<01:16,  1.32s/it]Capturing hidden states:  43%|████▎     | 43/100 [01:30<01:23,  1.46s/it]Capturing hidden states:  44%|████▍     | 44/100 [01:31<01:18,  1.40s/it]Capturing hidden states:  45%|████▌     | 45/100 [01:32<01:06,  1.21s/it]Capturing hidden states:  46%|████▌     | 46/100 [01:34<01:16,  1.42s/it]Capturing hidden states:  47%|████▋     | 47/100 [01:35<01:06,  1.26s/it]Capturing hidden states:  48%|████▊     | 48/100 [01:36<01:03,  1.22s/it]Capturing hidden states:  49%|████▉     | 49/100 [01:37<01:02,  1.23s/it]Capturing hidden states:  50%|█████     | 50/100 [01:39<01:13,  1.48s/it]Capturing hidden states:  51%|█████     | 51/100 [01:40<01:08,  1.41s/it]Capturing hidden states:  52%|█████▏    | 52/100 [01:43<01:21,  1.71s/it]Capturing hidden states:  53%|█████▎    | 53/100 [01:45<01:26,  1.85s/it]Capturing hidden states:  54%|█████▍    | 54/100 [01:48<01:33,  2.03s/it]Capturing hidden states:  55%|█████▌    | 55/100 [01:49<01:25,  1.91s/it]Capturing hidden states:  56%|█████▌    | 56/100 [01:51<01:22,  1.87s/it]Capturing hidden states:  57%|█████▋    | 57/100 [01:52<01:08,  1.59s/it]Capturing hidden states:  58%|█████▊    | 58/100 [01:53<01:00,  1.44s/it]Capturing hidden states:  59%|█████▉    | 59/100 [01:53<00:47,  1.15s/it]Capturing hidden states:  60%|██████    | 60/100 [01:55<00:49,  1.23s/it]Capturing hidden states:  61%|██████    | 61/100 [01:57<01:03,  1.62s/it]Capturing hidden states:  62%|██████▏   | 62/100 [02:00<01:10,  1.86s/it]Capturing hidden states:  63%|██████▎   | 63/100 [02:01<01:03,  1.72s/it]Capturing hidden states:  64%|██████▍   | 64/100 [02:03<01:02,  1.74s/it]Capturing hidden states:  65%|██████▌   | 65/100 [02:04<00:53,  1.54s/it]Capturing hidden states:  66%|██████▌   | 66/100 [02:06<00:56,  1.67s/it]Capturing hidden states:  67%|██████▋   | 67/100 [02:08<00:56,  1.72s/it]Capturing hidden states:  68%|██████▊   | 68/100 [02:09<00:49,  1.54s/it]Capturing hidden states:  69%|██████▉   | 69/100 [02:12<01:04,  2.07s/it]Capturing hidden states:  70%|███████   | 70/100 [02:15<01:11,  2.37s/it]Capturing hidden states:  71%|███████   | 71/100 [02:16<00:54,  1.89s/it]Capturing hidden states:  72%|███████▏  | 72/100 [02:17<00:47,  1.70s/it]Capturing hidden states:  73%|███████▎  | 73/100 [02:18<00:39,  1.45s/it]Capturing hidden states:  74%|███████▍  | 74/100 [02:22<00:53,  2.06s/it]Capturing hidden states:  75%|███████▌  | 75/100 [02:24<00:50,  2.01s/it]Capturing hidden states:  76%|███████▌  | 76/100 [02:25<00:41,  1.74s/it]Capturing hidden states:  77%|███████▋  | 77/100 [02:26<00:35,  1.52s/it]Capturing hidden states:  78%|███████▊  | 78/100 [02:27<00:29,  1.35s/it]Capturing hidden states:  79%|███████▉  | 79/100 [02:29<00:32,  1.56s/it]Capturing hidden states:  80%|████████  | 80/100 [02:30<00:28,  1.45s/it]Capturing hidden states:  81%|████████  | 81/100 [02:32<00:33,  1.75s/it]Capturing hidden states:  82%|████████▏ | 82/100 [02:34<00:29,  1.66s/it]Capturing hidden states:  83%|████████▎ | 83/100 [02:36<00:31,  1.86s/it]Capturing hidden states:  84%|████████▍ | 84/100 [02:39<00:32,  2.04s/it]Capturing hidden states:  85%|████████▌ | 85/100 [02:43<00:42,  2.80s/it]Capturing hidden states:  86%|████████▌ | 86/100 [02:45<00:34,  2.49s/it]Capturing hidden states:  87%|████████▋ | 87/100 [02:46<00:26,  2.03s/it]Capturing hidden states:  88%|████████▊ | 88/100 [02:48<00:22,  1.89s/it]Capturing hidden states:  89%|████████▉ | 89/100 [02:52<00:29,  2.73s/it]Capturing hidden states:  90%|█████████ | 90/100 [02:54<00:24,  2.45s/it]Capturing hidden states:  91%|█████████ | 91/100 [02:56<00:19,  2.18s/it]Capturing hidden states:  92%|█████████▏| 92/100 [02:59<00:20,  2.62s/it]Capturing hidden states:  93%|█████████▎| 93/100 [03:03<00:21,  3.03s/it]Capturing hidden states:  94%|█████████▍| 94/100 [03:06<00:18,  3.01s/it]Capturing hidden states:  95%|█████████▌| 95/100 [03:07<00:11,  2.32s/it]Capturing hidden states:  96%|█████████▌| 96/100 [03:08<00:07,  1.88s/it]Capturing hidden states:  97%|█████████▋| 97/100 [03:09<00:04,  1.60s/it]Capturing hidden states:  98%|█████████▊| 98/100 [03:14<00:05,  2.63s/it]Capturing hidden states:  99%|█████████▉| 99/100 [03:15<00:02,  2.28s/it]Capturing hidden states: 100%|██████████| 100/100 [03:17<00:00,  2.04s/it]Capturing hidden states: 100%|██████████| 100/100 [03:17<00:00,  1.97s/it]
+2025-10-17 23:18:34,090 | INFO | Processed 100 triples (skipped 0 missing correct chains)
+2025-10-17 23:18:34,978 | INFO | Saved probe data for layer 28 to artifacts/probe_data/layer28_probe_data.npz (1158 samples)
+Generated probe data for layers: 28
+=== Step 3: Computing probes and vectors ===
+  Computing probes for layer 28...
+2025-10-17 23:19:03,851 | INFO | Loading probe data from artifacts/probe_data/layer28_probe_data.npz
+2025-10-17 23:19:03,901 | INFO | Loaded 1158 samples from layer 28
+2025-10-17 23:19:03,902 | INFO | Feature dimension: 4096
+2025-10-17 23:19:03,902 | INFO | Label distribution: 579 wrong, 579 right
+2025-10-17 23:19:03,903 | INFO | Skipping linear probe training, computing visualizations only...
+2025-10-17 23:19:03,903 | INFO | Computing PCA transformation...
+2025-10-17 23:19:05,169 | INFO | PCA explained variance: 0.334, 0.050
+2025-10-17 23:19:05,268 | INFO | Saved PCA data to artifacts/probe_analysis/layer28_pca_data.npz
+2025-10-17 23:19:05,268 | INFO | Computing UMAP transformation...
+/u/c/h/cha/anaconda3/envs/steering/lib/python3.10/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+/u/c/h/cha/anaconda3/envs/steering/lib/python3.10/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+  warnings.warn(problem)
+2025-10-17 23:19:21,376 | INFO | Saved UMAP data to artifacts/probe_analysis/layer28_umap_data.npz
+2025-10-17 23:19:21,412 | INFO | Saved metrics to artifacts/probe_analysis/layer28_metrics.json
+2025-10-17 23:19:21,412 | INFO | All probe computations complete!
+=== Step 4: Generating visualizations ===
+  Plotting layer 28...
+2025-10-17 23:19:24,803 | INFO | Loading PCA data from artifacts/probe_analysis/layer28_pca_data.npz
+2025-10-17 23:19:26,185 | INFO | Saved plot to reports/hidden_state_viz/linear_separation/layer28_pca.png
+2025-10-17 23:19:26,531 | INFO | Saved cluster overlay to reports/hidden_state_viz/cluster_overlays/layer28_pca_clusters.png
+2025-10-17 23:19:26,532 | INFO | Loading UMAP data from artifacts/probe_analysis/layer28_umap_data.npz
+2025-10-17 23:19:26,802 | INFO | Saved plot to reports/hidden_state_viz/linear_separation/layer28_umap.png
+2025-10-17 23:19:27,059 | INFO | Saved cluster overlay to reports/hidden_state_viz/cluster_overlays/layer28_umap_clusters.png
+2025-10-17 23:19:27,059 | INFO | All plots saved to reports/hidden_state_viz
+=== Step 5: Analyzing critical token positions ===
+  Analyzing critical tokens for layer 28...
+2025-10-17 23:19:28,493 | INFO | Loading probe data from artifacts/probe_data/layer28_probe_data.npz
+2025-10-17 23:19:28,507 | INFO | Loaded 1158 tokens from layer 28
+2025-10-17 23:19:28,507 | INFO | Analyzing token contributions to PC2 separation...
+2025-10-17 23:19:29,842 | INFO | PCA explained variance: PC1=0.334, PC2=0.050
+2025-10-17 23:19:29,881 | INFO | Saved full results to reports/critical_tokens/layer28_critical_tokens.json
+2025-10-17 23:19:30,246 | INFO | Saved PC2 distribution plot to reports/critical_tokens/layer28_pc2_distribution.png
+
+================================================================================
+Top 20 tokens with LOWEST PC2 scores (most wrong-like):
+================================================================================
+ 1. [wrong] PC2=-13.552 pos=515 '-funded' (4891_mmlu_history)
+ 2. [right] PC2=-13.550 pos=515 '-funded' (4891_mmlu_history)
+ 3. [wrong] PC2=-13.351 pos=479 'Ġof' (4891_mmlu_history)
+ 4. [right] PC2=-13.346 pos=479 'Ġof' (4891_mmlu_history)
+ 5. [wrong] PC2=-13.264 pos=497 'Ġof' (4891_mmlu_history)
+ 6. [right] PC2=-13.264 pos=497 'Ġof' (4891_mmlu_history)
+ 7. [wrong] PC2=-13.229 pos=438 'Ċ' (4891_mmlu_history)
+ 8. [right] PC2=-13.228 pos=438 'Ċ' (4891_mmlu_history)
+ 9. [right] PC2=-13.185 pos=443 'Ġof' (4891_mmlu_history)
+10. [wrong] PC2=-13.183 pos=443 'Ġof' (4891_mmlu_history)
+11. [wrong] PC2=-13.041 pos=459 'Ġof' (4891_mmlu_history)
+12. [right] PC2=-13.034 pos=459 'Ġof' (4891_mmlu_history)
+13. [wrong] PC2=-13.025 pos=500 'Ġpublic' (4891_mmlu_history)
+14. [right] PC2=-13.022 pos=500 'Ġpublic' (4891_mmlu_history)
+15. [wrong] PC2=-12.941 pos=528 'Ġpublic' (4891_mmlu_history)
+16. [wrong] PC2=-12.939 pos=431 'Ġof' (4891_mmlu_history)
+17. [right] PC2=-12.938 pos=528 'Ġpublic' (4891_mmlu_history)
+18. [right] PC2=-12.937 pos=431 'Ġof' (4891_mmlu_history)
+19. [wrong] PC2=-12.905 pos=527 'Ġof' (4891_mmlu_history)
+20. [right] PC2=-12.899 pos=527 'Ġof' (4891_mmlu_history)
+
+================================================================================
+Top 20 tokens with HIGHEST PC2 scores (most right-like):
+================================================================================
+ 1. [right] PC2= 19.415 pos=174 'Ġhim' (4891_mmlu_history)
+ 2. [wrong] PC2= 19.412 pos=174 'Ġhim' (4891_mmlu_history)
+ 3. [right] PC2= 17.922 pos= 80 'Ġhim' (4891_mmlu_history)
+ 4. [wrong] PC2= 17.918 pos= 80 'Ġhim' (4891_mmlu_history)
+ 5. [wrong] PC2= 17.682 pos=134 'Ġbe' (4891_mmlu_history)
+ 6. [right] PC2= 17.672 pos=134 'Ġbe' (4891_mmlu_history)
+ 7. [right] PC2= 17.549 pos= 77 'Ġand' (4891_mmlu_history)
+ 8. [wrong] PC2= 17.546 pos= 77 'Ġand' (4891_mmlu_history)
+ 9. [right] PC2= 17.291 pos=226 'Ġbe' (4891_mmlu_history)
+10. [wrong] PC2= 17.290 pos=226 'Ġbe' (4891_mmlu_history)
+11. [right] PC2= 16.429 pos=282 'Ġbe' (4891_mmlu_history)
+12. [wrong] PC2= 16.424 pos=282 'Ġbe' (4891_mmlu_history)
+13. [wrong] PC2= 16.090 pos= 67 'Ġhim' (4891_mmlu_history)
+14. [right] PC2= 16.085 pos= 67 'Ġhim' (4891_mmlu_history)
+15. [right] PC2= 15.640 pos=154 'Ġbe' (4891_mmlu_history)
+16. [wrong] PC2= 15.637 pos=154 'Ġbe' (4891_mmlu_history)
+17. [right] PC2= 15.470 pos=133 'Ġto' (4891_mmlu_history)
+18. [wrong] PC2= 15.466 pos=133 'Ġto' (4891_mmlu_history)
+19. [right] PC2= 15.360 pos= 90 'Ġand' (4891_mmlu_history)
+20. [wrong] PC2= 15.355 pos= 90 'Ġand' (4891_mmlu_history)
+
+================================================================================
+Analysis complete!
+================================================================================
+
+=== Done! ===
+Results:
+  - Triples: artifacts/triples/triples_small.jsonl
+  - Hidden states: artifacts/hidden_states/
+  - Alignments: artifacts/alignments/
+  - Probe data: artifacts/probe_data/
+  - Computed probes: artifacts/probe_analysis/
+  - Visualizations: reports/hidden_state_viz/
+  - Critical tokens: reports/critical_tokens/
+
+Processed layers: 28

@@ -1,0 +1,267 @@
+With steering: D
+results['with_steering']['correct']: 0
+Evaluating steering:   1%|▌                                                             | 1/100 [00:21<36:00, 21.82s/it]With steering: i
+results['with_steering']['correct']: 0
+Evaluating steering:   2%|█▏                                                          | 2/100 [01:10<1:01:11, 37.47s/it]With steering: F
+results['with_steering']['correct']: 1
+Evaluating steering:   3%|█▊                                                            | 3/100 [01:25<44:29, 27.52s/it]With steering: D
+results['with_steering']['correct']: 1
+Evaluating steering:   4%|██▍                                                           | 4/100 [01:39<35:16, 22.05s/it]With steering: F
+results['with_steering']['correct']: 1
+Evaluating steering:   5%|███                                                           | 5/100 [01:55<31:35, 19.95s/it]With steering: s
+results['with_steering']['correct']: 1
+Evaluating steering:   6%|███▋                                                          | 6/100 [02:44<46:23, 29.61s/it]With steering: A
+results['with_steering']['correct']: 1
+Evaluating steering:   7%|████▎                                                         | 7/100 [03:00<38:59, 25.16s/it]With steering: B
+results['with_steering']['correct']: 2
+Evaluating steering:   8%|████▉                                                         | 8/100 [03:12<32:22, 21.12s/it]With steering: 16. **Analysis
+results['with_steering']['correct']: 2
+Evaluating steering:   9%|█████▌                                                        | 9/100 [04:01<45:00, 29.68s/it]With steering: y[n]=-((3/4)((5 + √19)/(3))^n+((1/4)((5 - √19)/(3
+results['with_steering']['correct']: 2
+Evaluating steering:  10%|██████                                                       | 10/100 [04:49<53:23, 35.59s/it]With steering: C
+results['with_steering']['correct']: 2
+Evaluating steering:  11%|██████▋                                                      | 11/100 [05:09<45:30, 30.68s/it]With steering: 29160(-0
+results['with_steering']['correct']: 2
+Evaluating steering:  12%|███████▎                                                     | 12/100 [05:57<52:53, 36.07s/it]With steering: B
+results['with_steering']['correct']: 2
+Evaluating steering:  13%|███████▉                                                     | 13/100 [06:31<51:02, 35.21s/it]With steering: D
+results['with_steering']['correct']: 2
+Evaluating steering:  14%|████████▌                                                    | 14/100 [06:46<41:43, 29.11s/it]With steering: C
+results['with_steering']['correct']: 2
+Evaluating steering:  15%|█████████▏                                                   | 15/100 [07:10<39:22, 27.79s/it]With steering: D
+results['with_steering']['correct']: 2
+Evaluating steering:  16%|█████████▊                                                   | 16/100 [07:27<34:19, 24.51s/it]With steering: D
+results['with_steering']['correct']: 3
+Evaluating steering:  17%|██████████▎                                                  | 17/100 [07:38<28:17, 20.45s/it]With steering: B
+results['with_steering']['correct']: 3
+Evaluating steering:  18%|██████████▉                                                  | 18/100 [08:04<30:00, 21.95s/it]With steering: D
+results['with_steering']['correct']: 4
+Evaluating steering:  19%|███████████▌                                                 | 19/100 [08:17<26:08, 19.37s/it]With steering: D
+results['with_steering']['correct']: 4
+Evaluating steering:  20%|████████████▏                                                | 20/100 [08:31<23:31, 17.65s/it]With steering: J
+results['with_steering']['correct']: 4
+Evaluating steering:  21%|████████████▊                                                | 21/100 [08:52<24:49, 18.86s/it]With steering: A
+results['with_steering']['correct']: 4
+Evaluating steering:  22%|█████████████▍                                               | 22/100 [09:05<22:01, 16.94s/it]With steering: I
+results['with_steering']['correct']: 4
+Evaluating steering:  23%|██████████████                                               | 23/100 [09:36<27:20, 21.30s/it]With steering: B
+results['with_steering']['correct']: 4
+Evaluating steering:  24%|██████████████▋                                              | 24/100 [10:25<37:13, 29.39s/it]With steering: ()
+results['with_steering']['correct']: 4
+Evaluating steering:  25%|███████████████▎                                             | 25/100 [11:13<43:52, 35.10s/it]With steering: C
+results['with_steering']['correct']: 5
+Evaluating steering:  26%|███████████████▊                                             | 26/100 [11:26<35:05, 28.45s/it]With steering: i
+results['with_steering']['correct']: 5
+Evaluating steering:  27%|████████████████▍                                            | 27/100 [12:14<41:54, 34.44s/it]With steering: s
+results['with_steering']['correct']: 5
+Evaluating steering:  28%|█████████████████                                            | 28/100 [12:33<35:40, 29.72s/it]With steering: G
+results['with_steering']['correct']: 5
+Evaluating steering:  29%|█████████████████▋                                           | 29/100 [12:46<29:21, 24.81s/it]With steering: c
+results['with_steering']['correct']: 5
+Evaluating steering:  30%|██████████████████▎                                          | 30/100 [13:35<37:13, 31.91s/it]With steering: G
+results['with_steering']['correct']: 5
+Evaluating steering:  31%|██████████████████▉                                          | 31/100 [13:55<32:30, 28.27s/it]With steering: K_p=(0
+results['with_steering']['correct']: 5
+Evaluating steering:  32%|███████████████████▌                                         | 32/100 [14:43<38:57, 34.38s/it]With steering: B
+results['with_steering']['correct']: 5
+Evaluating steering:  33%|████████████████████▏                                        | 33/100 [15:03<33:24, 29.92s/it]With steering: E
+results['with_steering']['correct']: 6
+Evaluating steering:  34%|████████████████████▋                                        | 34/100 [15:15<27:11, 24.72s/it]With steering: E
+results['with_steering']['correct']: 7
+Evaluating steering:  35%|█████████████████████▎                                       | 35/100 [15:38<26:07, 24.12s/it]With steering: B
+results['with_steering']['correct']: 7
+Evaluating steering:  36%|█████████████████████▉                                       | 36/100 [16:06<27:01, 25.33s/it]With steering: G
+results['with_steering']['correct']: 7
+Evaluating steering:  37%|██████████████████████▌                                      | 37/100 [16:25<24:32, 23.38s/it]With steering: D
+results['with_steering']['correct']: 7
+Evaluating steering:  38%|███████████████████████▏                                     | 38/100 [16:39<21:09, 20.47s/it]With steering: Step15: Determine the actual merchandiseretailrevenue
+results['with_steering']['correct']: 7
+Evaluating steering:  39%|███████████████████████▊                                     | 39/100 [17:27<29:18, 28.83s/it]With steering: G
+results['with_steering']['correct']: 7
+Evaluating steering:  40%|████████████████████████▍                                    | 40/100 [17:50<27:05, 27.10s/it]With steering: E
+results['with_steering']['correct']: 8
+Evaluating steering:  41%|█████████████████████████                                    | 41/100 [18:02<22:06, 22.48s/it]With steering: E
+results['with_steering']['correct']: 9
+Evaluating steering:  42%|█████████████████████████▌                                   | 42/100 [18:08<16:58, 17.56s/it]With steering: B
+results['with_steering']['correct']: 10
+Evaluating steering:  43%|██████████████████████████▏                                  | 43/100 [18:30<17:56, 18.89s/it]With steering: G
+results['with_steering']['correct']: 10
+Evaluating steering:  44%|██████████████████████████▊                                  | 44/100 [18:45<16:31, 17.71s/it]With steering: A
+results['with_steering']['correct']: 10
+Evaluating steering:  45%|███████████████████████████▍                                 | 45/100 [18:58<14:54, 16.27s/it]With steering: F
+results['with_steering']['correct']: 10
+Evaluating steering:  46%|████████████████████████████                                 | 46/100 [19:27<18:07, 20.15s/it]With steering: G
+results['with_steering']['correct']: 11
+Evaluating steering:  47%|████████████████████████████▋                                | 47/100 [19:45<17:20, 19.63s/it]With steering: "
+results['with_steering']['correct']: 11
+Evaluating steering:  48%|█████████████████████████████▎                               | 48/100 [20:34<24:29, 28.25s/it]With steering: G
+results['with_steering']['correct']: 11
+Evaluating steering:  49%|█████████████████████████████▉                               | 49/100 [20:51<21:17, 25.05s/it]With steering: 494.98888889 rounded down is 494
+results['with_steering']['correct']: 11
+Evaluating steering:  50%|██████████████████████████████▌                              | 50/100 [21:40<26:40, 32.02s/it]With steering: B
+results['with_steering']['correct']: 11
+Evaluating steering:  51%|███████████████████████████████                              | 51/100 [21:59<22:56, 28.09s/it]With steering: B
+results['with_steering']['correct']: 11
+Evaluating steering:  52%|███████████████████████████████▋                             | 52/100 [22:17<20:13, 25.28s/it]With steering: sak
+results['with_steering']['correct']: 11
+Evaluating steering:  53%|████████████████████████████████▎                            | 53/100 [23:06<25:16, 32.26s/it]With steering: C
+results['with_steering']['correct']: 11
+Evaluating steering:  54%|████████████████████████████████▉                            | 54/100 [23:29<22:34, 29.44s/it]With steering: D
+results['with_steering']['correct']: 11
+Evaluating steering:  55%|█████████████████████████████████▌                           | 55/100 [23:53<20:54, 27.89s/it]With steering: I
+results['with_steering']['correct']: 11
+Evaluating steering:  56%|██████████████████████████████████▏                          | 56/100 [24:18<19:51, 27.08s/it]With steering: G
+results['with_steering']['correct']: 11
+Evaluating steering:  57%|██████████████████████████████████▊                          | 57/100 [24:37<17:33, 24.51s/it]With steering: D
+results['with_steering']['correct']: 11
+Evaluating steering:  58%|███████████████████████████████████▍                         | 58/100 [24:55<15:52, 22.68s/it]With steering: F
+results['with_steering']['correct']: 12
+Evaluating steering:  59%|███████████████████████████████████▉                         | 59/100 [25:01<12:06, 17.72s/it]With steering: shere
+results['with_steering']['correct']: 12
+Evaluating steering:  60%|████████████████████████████████████▌                        | 60/100 [25:27<13:20, 20.02s/it]With steering: J
+results['with_steering']['correct']: 12
+Evaluating steering:  61%|█████████████████████████████████████▏                       | 61/100 [25:50<13:42, 21.10s/it]With steering: x≈1.48
+results['with_steering']['correct']: 12
+Evaluating steering:  62%|█████████████████████████████████████▊                       | 62/100 [26:39<18:32, 29.27s/it]With steering: C
+results['with_steering']['correct']: 12
+Evaluating steering:  63%|██████████████████████████████████████▍                      | 63/100 [27:01<16:42, 27.09s/it]With steering: ()
+results['with_steering']['correct']: 12
+Evaluating steering:  64%|███████████████████████████████████████                      | 64/100 [27:49<20:07, 33.53s/it]With steering: G
+results['with_steering']['correct']: 13
+Evaluating steering:  65%|███████████████████████████████████████▋                     | 65/100 [27:59<15:19, 26.28s/it]With steering: C
+results['with_steering']['correct']: 14
+Evaluating steering:  66%|████████████████████████████████████████▎                    | 66/100 [28:14<13:01, 22.97s/it]With steering: s
+results['with_steering']['correct']: 14
+Evaluating steering:  67%|████████████████████████████████████████▊                    | 67/100 [29:02<16:48, 30.56s/it]With steering: H
+results['with_steering']['correct']: 15
+Evaluating steering:  68%|█████████████████████████████████████████▍                   | 68/100 [29:20<14:18, 26.82s/it]With steering: Aem ≈{(
+results['with_steering']['correct']: 15
+Evaluating steering:  69%|██████████████████████████████████████████                   | 69/100 [30:09<17:12, 33.30s/it]With steering: J
+results['with_steering']['correct']: 16
+Evaluating steering:  70%|██████████████████████████████████████████▋                  | 70/100 [30:38<15:59, 32.00s/it]With steering: A
+results['with_steering']['correct']: 17
+Evaluating steering:  71%|███████████████████████████████████████████▎                 | 71/100 [30:54<13:13, 27.35s/it]With steering: J
+results['with_steering']['correct']: 17
+Evaluating steering:  72%|███████████████████████████████████████████▉                 | 72/100 [31:08<10:50, 23.25s/it]With steering: H
+results['with_steering']['correct']: 18
+Evaluating steering:  73%|████████████████████████████████████████████▌                | 73/100 [31:15<08:19, 18.49s/it]With steering: F
+results['with_steering']['correct']: 18
+Evaluating steering:  74%|█████████████████████████████████████████████▏               | 74/100 [31:37<08:26, 19.49s/it]With steering: B
+results['with_steering']['correct']: 18
+Evaluating steering:  75%|█████████████████████████████████████████████▊               | 75/100 [31:59<08:23, 20.14s/it]With steering: G
+results['with_steering']['correct']: 19
+Evaluating steering:  76%|██████████████████████████████████████████████▎              | 76/100 [32:16<07:46, 19.46s/it]With steering: H
+results['with_steering']['correct']: 19
+Evaluating steering:  77%|██████████████████████████████████████████████▉              | 77/100 [32:36<07:25, 19.35s/it]With steering: ActualdaysinhascountrPERIODSG1
+results['with_steering']['correct']: 19
+Evaluating steering:  78%|███████████████████████████████████████████████▌             | 78/100 [33:24<10:17, 28.05s/it]With steering: Fed. R. CivP.42(b)(2)(B)states"pleasexpectanciespleasexpectanciespleascentspleascentspleascpleascentspleascPLEASPLEASPLEASPLEASCpleascentspleascascpleascpleascpleascPLEASPLEASCpleaspleascpleascPLEASCpleascPLEASCpleasPLEASCpleascPLEASPLEascPLEASCpleascpleascPLEascPLEASCpleaspleasPLEASCpleasPLEascPLEASCpleASCpleascPLEASCPLEASCpleascPLEascPLEascPLEASCPLEASCPLEASCpleASCpleASCpleascpleascpleASCpleascPLEascpleascPLEASCPLEascPLEASCplePLEASCpleascPLEPLEASCpleascPLEpleascPLEASCplePLEascPLEASCplepleascPLEPLEASCPLEPLEASCplePLEASCPLEPLEASCPLEPLEPLEASCplePLEPLEASCplePLEascplePLEPLEASCpleASCplePLEPLEASCPLEPLEascPLEPLEPLEPLEPLEPLEASCpleASCPLEPLEPLEPLEPLEascPLEPLEASCplePLEplePLEPLEPLEPLEPLEplePLEPLEPLEplePLEASCplePLEPLEPLEPLEpleASCplePLEPLEPLEpleASCPLEPLEPLEplePLEplePLEPLEplePLEPLEpleASCpleASCplePLEplePLEplePLEpleASCplePLEpleASCpleASCPLEPLEplePLEPLEASCpleplePLEPLEPLEPLEASCPLEPLEplePLEpleASCPLEPLEpleASCpleplePLEPLEplePLEpleplePLEPLEPLEpleplePLEPLEpleASCPLEplePLEPLEPLEASCplepleASCplePLEPLEplePLEASCPLEPLEPLEPLEplepleASCplePLEpleplePLEASCplePLEpleASCPLEpleASCplePLEASCplePLEASCASCplePLEPLEPLEASCPLEplePLEPLEpleplePLEASCPLEPLEpleASCPLEASCplePLEPLEpleASCASCplePLEPLEplepleASCPLEPLEPLEASCPLEASCplePLEASCascPLEPLEPLEPLEpleascPLEPLEPLEPLEASCASCplePLEASCpleASCpleplePLEASCpleASCPLEASCpleASCPLEplePLEASCpleASCASCplePLEASCPLEASCpleplePLEASCPLEASCPLEPLEPLEpleASCASCPLEPLEPLEPLEASCascPLEPLEASCpleASCASCPLEPLEASCpleASCascPLEPLEPLEASCpleascplePLEPLEPLEPLEascplePLEPLEPLEASCASCPLEPLEPLEASCASCASCplePLEPLEASCASCpleASCplePLEASCPLEplePLEASCPLEASCASCplePLEplePLEASCpleascpleASCplePLEPLEascPLEPLEascPLEPLEplePLEPLEascPLEASCpleAscPLEPLEPLEPLEPLEAscPLEPLEPLEPLEASCAscPLEPLEPLEPLEpleAscPLEPLEPLEASCpleAscPLEASCplePLEPLEascplePLEASCplePLEascASCplePLEPLEPLEascPLEASCPLEPLEPLEascPLEascPLEPLEPLEascPLEplePLEPLEPLEascpleASCplePLEASCascplePLEPLEPLEascASCplePLEASCpleplePLEascPLEPLEPLEplePLEascPLEPLEASCascPLEASCplePLEPLEAscPLEPLEascPLEPLEAscPLEPLEplePLEPLEAscPLEASCplePLEASCAscPLEPLEascPLEASCascPLEPLEascPLEASCAscPLEPLEplePLEASCAscPLEASCplePLEascascPLEPLEPLEPLEascASCPLEPLEPLEPLEascascPLEPLEASCplepleascascPLEPLEPLEascascascPLEPLEPLEpleascascPLEPLEascPLEascascPLEPLEascascPLEASCplePLEpleascPLEPLEascPLEpleascPLEPLEplePLEascascPLEASCascPLEASCascPLEascPLEPLEascascascascPLEPLEascplePLEascPLEPLEascpleascPLEPLEPLEascpleascascPLEPLEplePLEASCascPLEASCPLEPLEascascPLEascPLEPLEpleascPLEASC
+results['with_steering']['correct']: 19
+Evaluating steering:  79%|████████████████████████████████████████████████▏            | 79/100 [34:13<11:59, 34.26s/it]With steering: B
+results['with_steering']['correct']: 20
+Evaluating steering:  80%|████████████████████████████████████████████████▊            | 80/100 [34:28<09:32, 28.61s/it]With steering: B
+results['with_steering']['correct']: 20
+Evaluating steering:  81%|█████████████████████████████████████████████████▍           | 81/100 [34:59<09:15, 29.26s/it]With steering: I
+results['with_steering']['correct']: 21
+Evaluating steering:  82%|██████████████████████████████████████████████████           | 82/100 [35:15<07:37, 25.42s/it]With steering: D
+results['with_steering']['correct']: 21
+Evaluating steering:  83%|██████████████████████████████████████████████████▋          | 83/100 [35:55<08:25, 29.73s/it]With steering: E
+results['with_steering']['correct']: 21
+Evaluating steering:  84%|███████████████████████████████████████████████████▏         | 84/100 [36:26<08:00, 30.05s/it]With steering: D
+results['with_steering']['correct']: 22
+Evaluating steering:  85%|███████████████████████████████████████████████████▊         | 85/100 [36:45<06:41, 26.76s/it]With steering: F
+results['with_steering']['correct']: 22
+Evaluating steering:  86%|████████████████████████████████████████████████████▍        | 86/100 [36:58<05:16, 22.61s/it]With steering: G
+results['with_steering']['correct']: 22
+Evaluating steering:  87%|█████████████████████████████████████████████████████        | 87/100 [37:09<04:10, 19.31s/it]With steering: C
+results['with_steering']['correct']: 23
+Evaluating steering:  88%|█████████████████████████████████████████████████████▋       | 88/100 [37:23<03:31, 17.62s/it]With steering: A
+results['with_steering']['correct']: 23
+Evaluating steering:  89%|██████████████████████████████████████████████████████▎      | 89/100 [37:57<04:08, 22.60s/it]With steering: F
+results['with_steering']['correct']: 23
+Evaluating steering:  90%|██████████████████████████████████████████████████████▉      | 90/100 [38:08<03:11, 19.15s/it]With steering: C
+results['with_steering']['correct']: 23
+Evaluating steering:  91%|███████████████████████████████████████████████████████▌     | 91/100 [38:33<03:06, 20.68s/it]With steering: i
+results['with_steering']['correct']: 23
+Evaluating steering:  92%|████████████████████████████████████████████████████████     | 92/100 [39:22<03:52, 29.11s/it]With steering: c
+results['with_steering']['correct']: 23
+Evaluating steering:  93%|████████████████████████████████████████████████████████▋    | 93/100 [40:10<04:04, 34.93s/it]With steering: (-((-T2^((-(-((-T1^((-(-((-T2^(((-((-T1^(((-((-T2^(((((-T1^((((-((-T2^((((-((-T1^(((((((-T2^(((((((-T1^(((((-((-T2^((( (((((-T1^((((((-((-T2[((((((-T1^(( (((((-((-T2^((((((((-T1^((((((((-T2^(((((((((-T1^(((((((((-T2^((((((((((-T1^((((((((((-T2^(((( (((((-T1^(((( (((((-T2^(((( (((-T1^(((((((-T2^((((((-T1^((((((-((-T2^(((((-((-T1^(((((-((-T2^ ((((((-((-T1[(((((-((-T2[(((((-((-T1((((-((-T2[(((-((-T1^((((-((-T2((((-((-T1^ ((((-((-T2^)((((-((-T1^)((((-((-T2^)(((-((-T1^)(((-((-T2^ (((-((-T1^ (((-((-T2^ (-((-((-T1^ ((((-((-T2^ ((((-((-T1^ (((((-((-T2(((((-((-T1^((( (((((-((-T2 (((((-((-T1^)(((((-((-T2^ (((((-((-
+results['with_steering']['correct']: 23
+Evaluating steering:  94%|█████████████████████████████████████████████████████████▎   | 94/100 [40:59<03:54, 39.05s/it]With steering: H
+results['with_steering']['correct']: 24
+Evaluating steering:  95%|█████████████████████████████████████████████████████████▉   | 95/100 [41:08<02:30, 30.03s/it]With steering: A
+results['with_steering']['correct']: 24
+Evaluating steering:  96%|██████████████████████████████████████████████████████████▌  | 96/100 [41:18<01:36, 24.12s/it]With steering: B
+results['with_steering']['correct']: 24
+Evaluating steering:  97%|███████████████████████████████████████████████████████████▏ | 97/100 [41:31<01:02, 20.73s/it]With steering: {h / ((0.0126)) = {(0
+results['with_steering']['correct']: 24
+Evaluating steering:  98%|███████████████████████████████████████████████████████████▊ | 98/100 [42:20<00:58, 29.28s/it]With steering: H
+results['with_steering']['correct']: 25
+Evaluating steering:  99%|████████████████████████████████████████████████████████████▍| 99/100 [42:50<00:29, 29.40s/it]With steering: E
+results['with_steering']['correct']: 26
+Evaluating steering: 100%|████████████████████████████████████████████████████████████| 100/100 [43:17<00:00, 25.98s/it]
+2025-11-10 00:44:21,497 | INFO | Saved evaluation results to artifacts/steering_evaluation/steering_evaluation_results.json
+2025-11-10 00:44:21,498 | INFO | ============================================================
+2025-11-10 00:44:21,498 | INFO | Steering Evaluation Results
+2025-11-10 00:44:21,498 | INFO | ============================================================
+2025-11-10 00:44:21,498 | INFO | Total triples evaluated: 100
+2025-11-10 00:44:21,499 | INFO |
+2025-11-10 00:44:21,499 | INFO | Without steering (from provided baseline):
+2025-11-10 00:44:21,499 | INFO |   Correct: 8
+2025-11-10 00:44:21,499 | INFO |   Incorrect: 92
+2025-11-10 00:44:21,499 | INFO |   Accuracy: 8.00%
+2025-11-10 00:44:21,499 | INFO |
+2025-11-10 00:44:21,499 | INFO | With steering (coefficient=1.00):
+2025-11-10 00:44:21,499 | INFO |   Correct: 26
+2025-11-10 00:44:21,499 | INFO |   Incorrect: 74
+2025-11-10 00:44:21,499 | INFO |   Accuracy: 26.00%
+2025-11-10 00:44:21,499 | INFO |
+2025-11-10 00:44:21,499 | INFO | Accuracy change (vs. baseline): +18.00%
+2025-11-10 00:44:21,500 | INFO | (Improvements/degradations not tracked when baseline is skipped)
+2025-11-10 00:44:21,500 | INFO | ============================================================
+Steering evaluation complete. Results saved to artifacts/steering_evaluation
+=== Step 8: Comparing embeddings with and without steering ===
+Comparing embeddings for layer 29...
+/u/b/d/bdeka/miniconda3/envs/steering/lib/python3.10/site-packages/transformers/utils/hub.py:127: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2025-11-10 00:44:34,065 | INFO | Loaded 100 triples for comparison
+2025-11-10 00:44:34,066 | INFO | Loaded steering vector for layer 29 (shape: (4096,), norm: 28.2656)
+2025-11-10 00:44:34,268 | INFO | Loading model meta-llama/Llama-3.1-8B-Instruct on cuda with dtype torch.float16
+Downloading shards: 100%|████████████████████████████████████████████████████████████████| 4/4 [00:00<00:00, 775.18it/s]
+Loading checkpoint shards: 100%|██████████████████████████████████████████████████████████| 4/4 [00:06<00:00,  1.64s/it]
+2025-11-10 00:44:43,350 | INFO | Collecting correct embeddings (prompt + correct_chain)...
+Collecting hidden states: 100%|███████████████████████████████████████████████████████| 100/100 [00:39<00:00,  2.54it/s]
+2025-11-10 00:45:22,744 | INFO | Collected 100 correct embeddings (shape: (100, 4096))
+2025-11-10 00:45:22,744 | INFO | Collecting wrong embeddings without steering (prompt only)...
+Collecting hidden states: 100%|███████████████████████████████████████████████████████| 100/100 [00:18<00:00,  5.31it/s]
+2025-11-10 00:45:41,571 | INFO | Collected 100 wrong embeddings without steering (shape: (100, 4096))
+2025-11-10 00:45:41,571 | INFO | Collecting wrong embeddings with steering (simulated by adding steering vector)...
+Collecting hidden states: 100%|███████████████████████████████████████████████████████| 100/100 [00:18<00:00,  5.29it/s]
+2025-11-10 00:46:00,475 | INFO | Collected 100 wrong embeddings with steering (shape: (100, 4096))
+2025-11-10 00:46:00,523 | INFO | Shift statistics:
+2025-11-10 00:46:00,523 | INFO |   Steering shift - Mean L2: 28.2656 ± 0.0000
+2025-11-10 00:46:00,523 | INFO |   Distance to correct (before) - Mean L2: 17.0000 ± 3.3203
+2025-11-10 00:46:00,523 | INFO |   Distance to correct (after) - Mean L2: 33.0312 ± 2.1523
+2025-11-10 00:46:00,523 | INFO |   Improvement - Mean L2 reduction: -16.0312
+2025-11-10 00:46:00,523 | INFO |   Improvement - Mean cosine improvement: -0.2878
+2025-11-10 00:46:00,660 | INFO | Saved statistics to reports/steering_embedding_comparison/layer29_shift_statistics.json
+2025-11-10 00:46:00,660 | INFO | Creating visualizations...
+2025-11-10 00:46:01,715 | INFO | Saved comparison plot to reports/steering_embedding_comparison/layer29_pca_comparison.png
+2025-11-10 00:46:02,767 | INFO | Saved overlay plot to reports/steering_embedding_comparison/layer29_pca_overlay.png
+/u/b/d/bdeka/miniconda3/envs/steering/lib/python3.10/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+/u/b/d/bdeka/miniconda3/envs/steering/lib/python3.10/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+  warnings.warn(problem)
+2025-11-10 00:46:12,843 | INFO | Saved comparison plot to reports/steering_embedding_comparison/layer29_umap_comparison.png
+/u/b/d/bdeka/miniconda3/envs/steering/lib/python3.10/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+2025-11-10 00:46:14,515 | INFO | Saved overlay plot to reports/steering_embedding_comparison/layer29_umap_overlay.png
+2025-11-10 00:46:14,515 | INFO | All visualizations saved to reports/steering_embedding_comparison
+Embedding comparison complete. Results saved to reports/steering_embedding_comparison
+
+=== Done! ===
+Results:
+  - Triples: artifacts/triples/triples_small.jsonl
+  - Hidden states: artifacts/hidden_states/
+  - Alignments: artifacts/alignments/
+  - Probe data: artifacts/probe_data/
+./run.bash: line 257: ANALYSIS_OUTPUT: unbound variable

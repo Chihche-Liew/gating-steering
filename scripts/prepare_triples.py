@@ -6,36 +6,26 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import os
 import random
-import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional, List
+from typing import Any, Dict, Optional
 
 import pandas as pd
-import torch
 from datasets import load_dataset
 from tqdm import tqdm
-from transformers import AutoModelForCausalLM, AutoTokenizer
+
+from model_wrapper import ModelWrapper
+from setup import (
+    configure_hf_caches,
+    setup_logging,
+    extract_final_answer,
+    normalize_answer,
+    should_include
+)
 
 
 LOGGER = logging.getLogger("prepare_triples")
-
-
-def configure_hf_caches() -> None:
-    project_root = Path(__file__).resolve().parents[1]
-    cache_root = project_root / ".cache"
-    hf_home = cache_root / "huggingface"
-    transformers_cache = cache_root / "transformers"
-
-    os.environ.setdefault("HF_HOME", str(hf_home))
-    os.environ.setdefault("HF_DATASETS_CACHE", str(hf_home / "datasets"))
-    os.environ.setdefault("HF_HUB_CACHE", str(hf_home / "hub"))
-    os.environ.setdefault("TRANSFORMERS_CACHE", str(transformers_cache))
-
-    for path in [hf_home, hf_home / "datasets", hf_home / "hub", transformers_cache]:
-        path.mkdir(parents=True, exist_ok=True)
 
 
 @dataclass
@@ -131,60 +121,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.set_defaults(strip_prompt_from_response=True)
     parser.add_argument("--seed", type=int, default=42, help="Random seed for shuffling and sampling.")
+    parser.add_argument(
+        "--device",
+        default=None,
+        help="Optional torch device override (defaults to cuda if available else cpu).",
+    )
     return parser.parse_args()
 
-
-def setup_logging() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
-
-
-ANSWER_PATTERNS = [
-    r"final\s+answer\s*[:\-]?\s*([A-J]|\w+)",
-    r"answer\s*[:\-]?\s*([A-J]|\w+)",
-    r"conclusion\s*[:\-]?\s*([A-J]|\w+)",
-    r"choice\s*[:\-]?\s*([A-J]|\w+)",
-]
-
-
-def extract_final_answer(text: str, pattern: str) -> str:
-    candidates: List[str] = []
-    compiled = re.compile(pattern, flags=re.IGNORECASE)
-    for matcher in [compiled] + [re.compile(pat, flags=re.IGNORECASE) for pat in ANSWER_PATTERNS]:
-        match = matcher.search(text)
-        if match and match.group(1):
-            candidates.append(match.group(1).strip().strip("."))
-    if candidates:
-        return candidates[0]
-
-    fallback = text.strip().splitlines()
-    if fallback:
-        last_line = fallback[-1].strip()
-        single_choice = re.fullmatch(r"([A-J])\.?", last_line, flags=re.IGNORECASE)
-        if single_choice:
-            return single_choice.group(1)
-        return last_line
-    return ""
-
-
-def normalise_answer(answer: str) -> str:
-    return re.sub(r"\s+", " ", answer.strip().lower())
-
-
-def load_model_and_tokenizer(model_name: str):
-    LOGGER.info("Loading model %s", model_name)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    dtype = torch.float16 if torch.cuda.is_available() else torch.float32
-    model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=dtype)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
-    model.eval()
-    return tokenizer, model, device
-
-
-def should_include(predicted: str, gold: str, only_wrong: bool) -> bool:
-    if not only_wrong:
-        return True
-    return normalise_answer(predicted) != normalise_answer(gold)
 
 
 def main() -> None:
@@ -192,19 +135,35 @@ def main() -> None:
     configure_hf_caches()
     args = parse_args()
 
+    # Load dataset
+    LOGGER.info("Loading dataset %s (split: %s)", args.dataset_name, args.split)
     raw_dataset = load_dataset(args.dataset_name, args.dataset_config, split=args.split)
     dataset_frame = raw_dataset.to_pandas()
+    
+    # Filter by correctness if available
     if "parsed_answer_correctness" in dataset_frame.columns:
+        original_len = len(dataset_frame)
         dataset_frame = dataset_frame[dataset_frame["parsed_answer_correctness"] == True]
+        LOGGER.info("Filtered %d -> %d samples with parsed_answer_correctness=True", 
+                   original_len, len(dataset_frame))
+    
+    # Remove duplicates
     dataset_frame = dataset_frame.drop_duplicates(subset="id", keep="first")
+    
     examples = dataset_frame.to_dict(orient="records")
+    
+    # Shuffle
     rng = random.Random(args.seed)
     rng.shuffle(examples)
+    
     if not examples:
-        LOGGER.error("No examples remain after filtering by parsed_answer_correctness.")
+        LOGGER.error("No examples remain after filtering.")
         return
-    tokenizer, model, device = load_model_and_tokenizer(args.model_name)
 
+    # Load model
+    model = ModelWrapper(args.model_name, device=args.device)
+
+    # Prepare output
     output_path: Path = args.output_path
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -221,17 +180,19 @@ def main() -> None:
         "skipped_no_gold_answer": 0,
     }
 
-    final_answer_pattern = args.final_answer_regex
-
     with output_path.open("w", encoding="utf-8") as sink:
         progress_total = args.max_samples if args.max_samples is not None else len(examples)
         progress_total = min(progress_total, len(examples))
+        
         for example in tqdm(examples, desc="Collecting triples", total=progress_total):
             stats["total_samples"] += 1
 
+            # Extract fields
             prompt_text = example.get(args.prompt_field)
             gold_answer = example.get(args.gold_answer_field)
             gold_chain_raw = example.get(args.gold_chain_field)
+            
+            # Process gold chain
             gold_chain: Optional[str] = None
             if gold_chain_raw:
                 if isinstance(gold_chain_raw, (list, tuple)):
@@ -239,6 +200,7 @@ def main() -> None:
                 else:
                     gold_chain = str(gold_chain_raw)
 
+            # Validate required fields
             if prompt_text is None or not str(prompt_text).strip():
                 stats["skipped_no_prompt"] += 1
                 continue
@@ -248,56 +210,30 @@ def main() -> None:
 
             stats["evaluated_samples"] += 1
 
+            # Format prompt
             formatted_prompt = args.prompt_template.format(prompt=str(prompt_text))
-            if hasattr(tokenizer, "apply_chat_template"):
-                messages = [
-                    {"role": "system", "content": args.system_prompt},
-                    {"role": "user", "content": formatted_prompt},
-                ]
-                formatted_prompt = tokenizer.apply_chat_template(
-                    messages,
-                    tokenize=False,
-                    add_generation_prompt=True,
-                )
 
-            encoded = tokenizer(
+            # Generate response
+            decoded_response = model.generate(
                 formatted_prompt,
-                return_tensors="pt",
-                return_attention_mask=True,
+                max_new_tokens=args.max_new_tokens,
+                temperature=args.temperature,
+                top_p=args.top_p,
+                do_sample=args.do_sample,
+                strip_prompt=args.strip_prompt_from_response,
+                system_prompt=args.system_prompt,
             )
-            input_ids = encoded["input_ids"].to(device)
-            attention_mask = encoded["attention_mask"].to(device)
 
-            generation_kwargs = {
-                "max_new_tokens": args.max_new_tokens,
-                "temperature": args.temperature,
-                "top_p": args.top_p,
-                "do_sample": args.do_sample,
-                "repetition_penalty": 1.05,
-                "no_repeat_ngram_size": 6,
-                "pad_token_id": tokenizer.eos_token_id,
-            }
+            # Extract answer
+            predicted_answer = extract_final_answer(decoded_response, args.final_answer_regex)
 
-            with torch.no_grad():
-                generated_ids = model.generate(
-                    input_ids=input_ids,
-                    attention_mask=attention_mask,
-                    eos_token_id=tokenizer.eos_token_id,
-                    **generation_kwargs,
-                )
-
-            response_ids = generated_ids[0]
-            if args.strip_prompt_from_response:
-                response_ids = response_ids[input_ids.shape[1] :]
-
-            decoded_response = tokenizer.decode(response_ids, skip_special_tokens=True).strip()
-            predicted_answer = extract_final_answer(decoded_response, final_answer_pattern)
-
+            # Filter if needed
             if not should_include(predicted_answer, str(gold_answer), args.only_wrong):
                 if args.max_samples and stats["collected_triples"] >= args.max_samples:
                     break
                 continue
 
+            # Create triple
             triple = TripleRecord(
                 sample_id=str(example.get("id", stats["evaluated_samples"])),
                 prompt=str(prompt_text),
@@ -320,12 +256,13 @@ def main() -> None:
             if args.max_samples and stats["collected_triples"] >= args.max_samples:
                 break
 
+    # Write stats
     stats_path.parent.mkdir(parents=True, exist_ok=True)
     stats_path.write_text(json.dumps(stats, indent=2), encoding="utf-8")
+    
     LOGGER.info("Wrote %d triples to %s", stats["collected_triples"], output_path)
     LOGGER.info("Stats logged to %s", stats_path)
 
 
 if __name__ == "__main__":
     main()
-

@@ -1,53 +1,31 @@
 #!/usr/bin/env python3
-"""Collect hidden activations for wrong/right chains and create probe visualizations."""
+"""Collect hidden activations for wrong/right chains."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import logging
-import os
 import random
 from dataclasses import dataclass
-from itertools import zip_longest
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import torch
 import torch.nn.functional as F
 from Levenshtein import opcodes
-from sklearn.decomposition import PCA
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
-from sklearn.model_selection import train_test_split
 from tqdm import tqdm
-from transformers import AutoModelForCausalLM, AutoTokenizer
 
-try:
-    import umap
-except ImportError as exc:  # pragma: no cover - runtime guard for optional dependency
-    raise SystemExit("umap-learn is required for this script. Install via pip install umap-learn.") from exc
-
-import matplotlib.pyplot as plt
+from model_wrapper import ModelWrapper
+from setup import (
+    configure_hf_caches,
+    setup_logging,
+    build_teacher_forcing_text,
+)
 
 
 LOGGER = logging.getLogger("collect_hidden_states")
-
-
-def configure_hf_caches() -> None:
-    project_root = Path(__file__).resolve().parents[1]
-    cache_root = project_root / ".cache"
-    hf_home = cache_root / "huggingface"
-    transformers_cache = cache_root / "transformers"
-
-    os.environ.setdefault("HF_HOME", str(hf_home))
-    os.environ.setdefault("HF_DATASETS_CACHE", str(hf_home / "datasets"))
-    os.environ.setdefault("HF_HUB_CACHE", str(hf_home / "hub"))
-    os.environ.setdefault("TRANSFORMERS_CACHE", str(transformers_cache))
-
-    for path in [hf_home, hf_home / "datasets", hf_home / "hub", transformers_cache]:
-        path.mkdir(parents=True, exist_ok=True)
 
 
 @dataclass
@@ -81,10 +59,10 @@ def parse_args() -> argparse.Namespace:
         help="Directory for saving token alignment metadata per sample.",
     )
     parser.add_argument(
-        "--viz-dir",
+        "--probe-data-dir",
         type=Path,
-        default=Path("reports/hidden_state_viz"),
-        help="Directory for saving probe diagnostics and plots (subfolders created automatically).",
+        default=Path("artifacts/probe_data"),
+        help="Directory for saving probe training data (features and labels).",
     )
     parser.add_argument(
         "--model-name",
@@ -105,16 +83,10 @@ def parse_args() -> argparse.Namespace:
         help="Optional cap on number of triples to process (for debugging).",
     )
     parser.add_argument(
-        "--probe-layer",
-        type=int,
-        default=None,
-        help="Layer id to use for linear probe (defaults to first entry in --layers).",
-    )
-    parser.add_argument(
         "--probe-max-samples",
         type=int,
         default=4000,
-        help="Maximum number of matched token activations to use for probing and visualization.",
+        help="Maximum number of matched token activations to use for probing and visualization per layer.",
     )
     parser.add_argument(
         "--device",
@@ -127,112 +99,136 @@ def parse_args() -> argparse.Namespace:
         default=42,
         help="Random seed for reproducibility when subsampling tokens.",
     )
+    parser.add_argument(
+        "--pooling-method",
+        type=str,
+        default="mean",
+        choices=["mean", "last_token", "per_token"],
+        help="Pooling method: 'mean' (average all tokens), 'last_token' (final token), 'per_token' (each matched token).",
+    )
+    parser.add_argument(
+        "--alignment-method",
+        type=str,
+        default="text",
+        choices=["text", "hidden_dp"],
+        help="Token alignment strategy. 'text' uses exact token matches; 'hidden_dp' uses hidden-state dynamic programming with fallback.",
+    )
+    parser.add_argument(
+        "--alignment-layer",
+        type=int,
+        default=None,
+        help="Layer id whose hidden states are used for hidden_dp alignment (defaults to first layer in --layers).",
+    )
+    parser.add_argument(
+        "--dp-max-shift",
+        type=int,
+        default=None,
+        help="Maximum index shift allowed between matched tokens for hidden_dp alignment.",
+    )
+    parser.add_argument(
+        "--dp-gap-penalty",
+        type=float,
+        default=None,
+        help="Gap penalty used in hidden_dp alignment (defaults to mean cosine distance).",
+    )
+    parser.add_argument(
+        "--dp-distance-threshold",
+        type=float,
+        default=None,
+        help="Distance threshold for accepting matches in hidden_dp alignment (defaults to mean + std of distances).",
+    )
+    parser.add_argument(
+        "--dp-alignment",
+        action="store_true",
+        help="Use hidden-state DP alignments for token feature sampling (affects per_token pooling).",
+    )
+    parser.add_argument(
+        "--system-prompt",
+        default="You are a careful reasoning assistant. Think step by step and end with 'Final answer: <choice>'.",
+        help="System message used when the tokenizer supports chat templates.",
+    )
     return parser.parse_args()
 
 
-def setup_logging() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
-
-
 def load_triples(path: Path) -> List[Triple]:
+    """Load triples from JSONL or JSON file."""
     triples: List[Triple] = []
     with path.open("r", encoding="utf-8") as src:
-        for line in src:
-            payload = json.loads(line)
-            correct_chain = payload.get("correct_chain")
-            if not correct_chain:
-                continue
-            triples.append(
-                Triple(
-                    sample_id=str(payload.get("sample_id")),
-                    prompt=str(payload.get("prompt", "")),
-                    wrong_chain=str(payload.get("wrong_chain", "")),
-                    correct_chain=str(correct_chain),
-                    correct_answer=str(payload.get("correct_answer", "")),
-                    metadata=dict(payload.get("metadata", {})),
-                )
+        first_chunk = src.read(1)
+
+    if not first_chunk:
+        LOGGER.error("Triples file %s is empty.", path)
+        return triples
+
+    is_json_array = first_chunk in ("[", "{")
+
+    if is_json_array:
+        with path.open("r", encoding="utf-8") as src:
+            try:
+                payloads = json.load(src)
+            except json.JSONDecodeError as exc:
+                LOGGER.error("Failed to parse JSON file %s: %s", path, exc)
+                return triples
+
+        if isinstance(payloads, dict):
+            payloads = payloads.get("records") or payloads.get("data") or []
+            if not isinstance(payloads, list):
+                LOGGER.error("JSON file %s does not contain a list of records.", path)
+                return triples
+    else:
+        payloads = []
+        with path.open("r", encoding="utf-8") as src:
+            for line in src:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    payloads.append(json.loads(line))
+                except json.JSONDecodeError as exc:
+                    LOGGER.warning("Skipping malformed JSON line: %s (error: %s)", line[:200], exc)
+
+    for payload in payloads:
+        if not isinstance(payload, dict):
+            continue
+        correct_chain = payload.get("correct_chain")
+        if not correct_chain:
+            continue
+        triples.append(
+            Triple(
+                sample_id=str(payload.get("sample_id")),
+                prompt=str(payload.get("prompt", "")),
+                wrong_chain=str(payload.get("wrong_chain", "")),
+                correct_chain=str(correct_chain),
+                correct_answer=str(payload.get("correct_answer", "")),
+                metadata=dict(payload.get("metadata", {})),
             )
+        )
     return triples
 
 
-def load_model(model_name: str, device: Optional[str]) -> Tuple[AutoTokenizer, AutoModelForCausalLM, torch.device]:
-    LOGGER.info("Loading model %s", model_name)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype=torch.float16 if torch.cuda.is_available() else None,
-    )
-    torch_device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
-    model.to(torch_device)
-    model.eval()
-    return tokenizer, model, torch_device
-
-
-def reconstruct_prompt(metadata: Dict, prompt: str) -> str:
-    template = metadata.get("prompt_template", "{prompt}")
-    try:
-        return template.format(prompt=prompt)
-    except KeyError:
-        LOGGER.warning("Prompt template missing {prompt} placeholder, using raw prompt")
-        return prompt
-
-
-def strip_duplicate_prefix(text: str, prefix: str) -> str:
-    if text.startswith(prefix):
-        return text[len(prefix) :].lstrip()
-    return text
-
-
-def build_teacher_forcing_text(prompt_text: str, chain_text: str, metadata: Dict) -> str:
-    formatted_prompt = reconstruct_prompt(metadata, prompt_text)
-    cleaned_chain = strip_duplicate_prefix(chain_text, prompt_text)
-    cleaned_chain = strip_duplicate_prefix(cleaned_chain, formatted_prompt)
-    if cleaned_chain:
-        return f"{formatted_prompt}\n\n{cleaned_chain}".strip()
-    return formatted_prompt
-
-
-def tokenize(tokenizer: AutoTokenizer, text: str, device: torch.device) -> Dict[str, torch.Tensor]:
-    encoded = tokenizer(text, return_tensors="pt", return_attention_mask=True, return_offsets_mapping=True)
-    encoded = {key: value.to(device) if isinstance(value, torch.Tensor) else value for key, value in encoded.items()}
-    return encoded
-
-
-def capture_hidden_states(
-    model: AutoModelForCausalLM,
-    inputs: Dict[str, torch.Tensor],
-    target_layers: Iterable[int],
-) -> Dict[int, torch.Tensor]:
-    with torch.no_grad():
-        outputs = model(**inputs, output_hidden_states=True, use_cache=False)
-    hidden_states: Tuple[torch.Tensor, ...] = outputs.hidden_states  # type: ignore[attr-defined]
-    captures: Dict[int, torch.Tensor] = {}
-    for layer_id in target_layers:
-        index = layer_id + 1  # +1 because hidden_states[0] is embeddings
-        if index >= len(hidden_states):
-            raise ValueError(f"Requested layer {layer_id} exceeds available hidden states ({len(hidden_states)-1})")
-        captures[layer_id] = hidden_states[index].squeeze(0).detach().cpu()
-    return captures
-
-
-def token_strings(tokenizer: AutoTokenizer, input_ids: torch.Tensor) -> List[str]:
-    tokens = tokenizer.convert_ids_to_tokens(input_ids.tolist())
-    return tokens
-
-
-def _align_tokens_text(wrong_tokens: List[str], right_tokens: List[str]) -> List[Tuple[int, int]]:
+def _align_tokens_text(
+    wrong_tokens: List[str],
+    right_tokens: List[str],
+) -> Tuple[List[Tuple[int, int]], Dict[str, Any]]:
     alignment_opcodes = opcodes(wrong_tokens, right_tokens)
     matches: List[Tuple[int, int]] = []
     for tag, i1, i2, j1, j2 in alignment_opcodes:
         if tag == "equal":
             matches.extend(zip(range(i1, i2), range(j1, j2)))
-    return matches
+    metadata: Dict[str, Any] = {
+        "strategy": "text",
+        "num_matches": len(matches),
+    }
+    return matches, metadata
 
 
-def _cosine_distance_matrix(wrong_hidden: torch.Tensor, right_hidden: torch.Tensor) -> np.ndarray:
+def _cosine_distance_matrix(
+    wrong_hidden: torch.Tensor,
+    right_hidden: torch.Tensor,
+) -> np.ndarray:
     wrong_norm = F.normalize(wrong_hidden, p=2, dim=1)
     right_norm = F.normalize(right_hidden, p=2, dim=1)
-    similarity = torch.matmul(wrong_norm, right_norm.T)
+    similarity = torch.matmul(wrong_norm, right_norm.T).clamp(-1.0, 1.0)
     distances = 1.0 - similarity
     return distances.cpu().numpy()
 
@@ -325,7 +321,6 @@ def _hidden_alignment_dp(
             j -= 1
             gap_steps += 1
         else:
-            # Safety: if direction is invalid, break out to avoid infinite loop.
             LOGGER.warning("Unexpected traceback direction %s at (%d, %d)", direction, i, j)
             break
 
@@ -360,8 +355,8 @@ def _dp_quality_ok(metrics: Dict[str, Any]) -> bool:
     avg_distance = metrics.get("avg_distance")
     if avg_distance is None:
         return False
-    distance_threshold = metrics.get("distance_threshold")
-    if distance_threshold is not None and avg_distance > distance_threshold:
+    threshold = metrics.get("distance_threshold")
+    if threshold is not None and avg_distance > threshold:
         return False
     gap_ratio = metrics.get("gap_ratio")
     if gap_ratio is not None and gap_ratio > 0.6:
@@ -372,95 +367,69 @@ def _dp_quality_ok(metrics: Dict[str, Any]) -> bool:
 def align_tokens(
     wrong_tokens: List[str],
     right_tokens: List[str],
-    wrong_hidden: torch.Tensor,
-    right_hidden: torch.Tensor,
+    wrong_hidden: Optional[torch.Tensor],
+    right_hidden: Optional[torch.Tensor],
+    method: str = "text",
+    max_shift: Optional[int] = None,
+    gap_penalty: Optional[float] = None,
+    distance_threshold: Optional[float] = None,
 ) -> Tuple[List[Tuple[int, int]], Dict[str, Any]]:
-    text_matches = _align_tokens_text(wrong_tokens, right_tokens)
+    text_matches, text_metadata = _align_tokens_text(wrong_tokens, right_tokens)
+
+    if method != "hidden_dp":
+        return text_matches, text_metadata
+
+    if wrong_hidden is None or right_hidden is None:
+        fallback_meta = dict(text_metadata)
+        fallback_meta.update(
+            {
+                "strategy": "text_fallback",
+                "used_fallback": True,
+                "fallback_reason": "hidden_states_unavailable",
+            }
+        )
+        return text_matches, fallback_meta
 
     try:
-        dp_matches, dp_metrics = _hidden_alignment_dp(wrong_hidden, right_hidden)
-    except Exception as exc:  # pragma: no cover - defensive guard
-        LOGGER.exception("Hidden-state DP alignment failed; falling back to text alignment.")
-        return text_matches, {
-            "strategy": "text_fallback",
-            "used_fallback": True,
-            "fallback_reason": f"exception: {exc}",
-            "num_matches": len(text_matches),
-        }
+        dp_matches, dp_metrics = _hidden_alignment_dp(
+            wrong_hidden,
+            right_hidden,
+            max_shift=max_shift,
+            gap_penalty=gap_penalty,
+            distance_threshold=distance_threshold,
+        )
+    except Exception as exc:
+        LOGGER.warning("Hidden-state DP alignment failed; falling back to text alignment: %s", exc)
+        fallback_meta = dict(text_metadata)
+        fallback_meta.update(
+            {
+                "strategy": "text_fallback",
+                "used_fallback": True,
+                "fallback_reason": f"exception: {exc}",
+            }
+        )
+        return text_matches, fallback_meta
 
     if _dp_quality_ok(dp_metrics):
-        dp_metrics.update({"strategy": "hidden_dp", "used_fallback": False})
+        dp_metrics["used_fallback"] = False
         return dp_matches, dp_metrics
 
-    dp_metrics.update({
-        "strategy": "text_fallback",
-        "used_fallback": True,
-        "fallback_reason": dp_metrics.get("error", "quality_check_failed"),
-        "num_matches": len(text_matches),
-        "fallback_matches": len(text_matches),
-    })
-    LOGGER.debug(
-        "DP alignment rejected (avg_dist=%s, gap_ratio=%s, matches=%s); using text alignment.",
-        dp_metrics.get("avg_distance"),
-        dp_metrics.get("gap_ratio"),
-        dp_metrics.get("num_matches"),
+    fallback_meta = dict(text_metadata)
+    fallback_meta.update(
+        {
+            "strategy": "text_fallback",
+            "used_fallback": True,
+            "fallback_reason": dp_metrics.get("error", "quality_check_failed"),
+            "dp_metrics": dp_metrics,
+        }
     )
-    return text_matches, dp_metrics
+    return text_matches, fallback_meta
 
 
 def subsample_pairs(pairs: List[Tuple[int, int]], max_samples: int, rng: random.Random) -> List[Tuple[int, int]]:
     if len(pairs) <= max_samples:
         return pairs
     return rng.sample(pairs, max_samples)
-
-
-def fit_linear_probe(features: np.ndarray, labels: np.ndarray) -> Dict:
-    if len(np.unique(labels)) < 2:
-        return {"warning": "Not enough class diversity for probe."}
-    x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=0, stratify=labels)
-    clf = LogisticRegression(max_iter=1000, n_jobs=None)
-    clf.fit(x_train, y_train)
-    preds = clf.predict(x_test)
-    acc = accuracy_score(y_test, preds)
-    report = classification_report(y_test, preds, output_dict=True)
-    return {"accuracy": float(acc), "report": report}
-
-
-def run_pca(features: np.ndarray, labels: np.ndarray, output_path: Path) -> Optional[np.ndarray]:
-    if features.shape[0] < 2:
-        LOGGER.warning("Insufficient samples for PCA plot.")
-        return None
-    pca = PCA(n_components=2, random_state=0)
-    transformed = pca.fit_transform(features)
-    save_scatter(transformed, labels, output_path, title="PCA")
-    return transformed
-
-
-def run_umap(features: np.ndarray, labels: np.ndarray, output_path: Path) -> Optional[np.ndarray]:
-    if features.shape[0] < 2:
-        LOGGER.warning("Insufficient samples for UMAP plot.")
-        return None
-    reducer = umap.UMAP(n_components=2, random_state=0)
-    embedded = reducer.fit_transform(features)
-    save_scatter(embedded, labels, output_path, title="UMAP")
-    return embedded
-
-
-def save_scatter(points: np.ndarray, labels: np.ndarray, output_path: Path, title: str) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.figure(figsize=(6, 5))
-    palette = {0: "red", 1: "blue"}
-    for label in np.unique(labels):
-        mask = labels == label
-        plt.scatter(points[mask, 0], points[mask, 1], label="wrong" if label == 0 else "right", alpha=0.6, s=10,
-                    c=palette.get(label, "gray"))
-    plt.title(f"{title} projection")
-    plt.xlabel("Component 1")
-    plt.ylabel("Component 2")
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(output_path)
-    plt.close()
 
 
 def save_alignment(
@@ -470,6 +439,7 @@ def save_alignment(
     matches: List[Tuple[int, int]],
     metadata: Optional[Dict[str, Any]] = None,
 ) -> None:
+    """Save token alignment to JSON."""
     alignment_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "wrong_tokens": wrong_tokens,
@@ -484,36 +454,50 @@ def save_alignment(
     alignment_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
-def save_cluster_overlay(
-    points: np.ndarray,
-    labels: np.ndarray,
-    output_path: Path,
-    title: str,
-) -> None:
-    if points is None:
-        return
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.figure(figsize=(6, 5))
-    label_palette = {0: "red", 1: "blue"}
-    handled = set()
-    for label in np.unique(labels):
-        mask = labels == label
-        plt.scatter(
-            points[mask, 0],
-            points[mask, 1],
-            c=label_palette.get(label, "gray"),
-            marker="o" if label == 0 else "x",
-            s=20,
-            alpha=0.7,
-            label="wrong" if label == 0 else "right",
-        )
-    plt.title(f"{title} separation")
-    plt.xlabel("Component 1")
-    plt.ylabel("Component 2")
-    plt.legend(loc="best", fontsize="small")
-    plt.tight_layout()
-    plt.savefig(output_path)
-    plt.close()
+def find_position_before_final_answer(tokens: List[str]) -> int:
+    """
+    Find the token position just before "Final answer" or "final answer" appears.
+
+    Args:
+        tokens: List of token strings
+
+    Returns:
+        Index of the token just before "final answer" starts, or -1 if not found
+    """
+    # Common patterns for "final answer" in tokenization
+    # Could be ["Final", " answer"], ["final", " answer"], ["Final", "answer"], etc.
+
+    for i in range(len(tokens) - 1):
+        # Check current and next token
+        current = tokens[i].lower().strip()
+        next_token = tokens[i + 1].lower().strip() if i + 1 < len(tokens) else ""
+
+        # Pattern 1: "Final" or "final" followed by "answer" or " answer"
+        if current in ["final", "▁final"] and "answer" in next_token:
+            # Return position before "Final"
+            return max(0, i - 1)
+
+        # Pattern 2: Single token "finalanswer" or "final_answer"
+        if "final" in current and "answer" in current:
+            return max(0, i - 1)
+
+    # Fallback: try searching in reconstructed text
+    # Join tokens and search for "final answer" case-insensitively
+    text = "".join(tokens).lower()
+    final_answer_pos = text.find("finalanswer")
+    if final_answer_pos == -1:
+        final_answer_pos = text.find("final answer")
+
+    if final_answer_pos != -1:
+        # Count tokens up to this position
+        char_count = 0
+        for i, token in enumerate(tokens):
+            char_count += len(token)
+            if char_count >= final_answer_pos:
+                return max(0, i - 1)
+
+    # If not found, return -1 (will use last token as fallback)
+    return -1
 
 
 def main() -> None:
@@ -522,26 +506,93 @@ def main() -> None:
     args = parse_args()
     rng = random.Random(args.seed)
 
+    dp_alignment_requested = bool(args.dp_alignment)
+    dp_alignment_active = dp_alignment_requested and args.pooling_method == "per_token"
+    if dp_alignment_requested and args.pooling_method != "per_token":
+        LOGGER.info(
+            "Ignoring --dp-alignment because pooling method '%s' does not use token-level features.",
+            args.pooling_method,
+        )
+    alignment_method = "hidden_dp" if dp_alignment_active else "text"
+
+    # Load triples
     triples = load_triples(args.triples_path)
     if not triples:
         LOGGER.error("No usable triples found (correct_chain missing?). Exiting.")
         return
 
+    # Setup layers
     target_layers = sorted(set(args.layers))
-    probe_layer = args.probe_layer if args.probe_layer is not None else target_layers[0]
-    if probe_layer not in target_layers:
-        LOGGER.warning("Probe layer %s not in --layers, adding automatically.", probe_layer)
-        target_layers.append(probe_layer)
-        target_layers = sorted(set(target_layers))
+    LOGGER.info("Target layers for hidden state capture: %s", target_layers)
 
-    tokenizer, model, device = load_model(args.model_name, args.device)
+    alignment_layer = args.alignment_layer if args.alignment_layer is not None else target_layers[0]
+    if alignment_method == "hidden_dp" and alignment_layer not in target_layers:
+        LOGGER.info(
+            "Alignment layer %s not in --layers; adding for hidden-state capture.",
+            alignment_layer,
+        )
+    capture_layers = sorted(
+        set(target_layers + ([alignment_layer] if alignment_method == "hidden_dp" else []))
+    )
 
+    if dp_alignment_active:
+        LOGGER.info("Dynamic programming alignment enabled for per-token pooling.")
+
+    # Load model
+    model = ModelWrapper(args.model_name, device=args.device)
+
+    # Print GPU information
+    import os
+    num_gpus = torch.cuda.device_count()
+    visible_devices = os.environ.get('CUDA_VISIBLE_DEVICES', 'All')
+    print(f"\n{'='*80}")
+    print(f"GPU CONFIGURATION:")
+    print(f"  Number of GPUs available: {num_gpus}")
+    print(f"  CUDA_VISIBLE_DEVICES: {visible_devices}")
+    print(f"  PyTorch CUDA available: {torch.cuda.is_available()}")
+
+    # Print device map (how model is distributed across GPUs)
+    if hasattr(model.model, 'hf_device_map'):
+        print(f"\n  Model Distribution Across GPUs:")
+        device_map = model.model.hf_device_map
+        device_counts = {}
+        for name, device in device_map.items():
+            device_str = str(device)
+            device_counts[device_str] = device_counts.get(device_str, 0) + 1
+
+        for device, count in sorted(device_counts.items()):
+            print(f"    {device}: {count} layers/components")
+
+    # Print memory usage per GPU
+    if torch.cuda.is_available():
+        print(f"\n  GPU Memory Usage:")
+        for i in range(num_gpus):
+            allocated = torch.cuda.memory_allocated(i) / 1024**3  # Convert to GB
+            reserved = torch.cuda.memory_reserved(i) / 1024**3
+            print(f"    GPU {i}: Allocated={allocated:.2f} GB, Reserved={reserved:.2f} GB")
+    print(f"{'='*80}\n")
+
+    # Create output directories
     args.output_dir.mkdir(parents=True, exist_ok=True)
     args.alignment_dir.mkdir(parents=True, exist_ok=True)
-    args.viz_dir.mkdir(parents=True, exist_ok=True)
+    args.probe_data_dir.mkdir(parents=True, exist_ok=True)
 
-    probe_features: List[np.ndarray] = []
-    probe_labels: List[int] = []
+    # Probe data collection - track per layer
+    probe_data_per_layer = {
+        layer: {
+            "features": [],
+            "labels": [],
+            "token_positions": [],
+            "sample_ids": [],
+            "valid": [],
+            "dp_used_alignment": [],
+            "dp_used_fallback": [],
+            "dp_pair_index": [],
+            "dp_gap_ratio": [],
+            "dp_avg_distance": [],
+        }
+        for layer in target_layers
+    }
 
     processed = 0
     skipped_missing_chain = 0
@@ -554,24 +605,62 @@ def main() -> None:
             skipped_missing_chain += 1
             continue
 
-        wrong_text = build_teacher_forcing_text(triple.prompt, triple.wrong_chain, triple.metadata)
-        right_text = build_teacher_forcing_text(triple.prompt, triple.correct_chain, triple.metadata)
-
-        wrong_inputs = tokenize(tokenizer, wrong_text, device)
-        right_inputs = tokenize(tokenizer, right_text, device)
-
-        wrong_hidden = capture_hidden_states(model, wrong_inputs, target_layers)
-        right_hidden = capture_hidden_states(model, right_inputs, target_layers)
-
-        wrong_tokens = token_strings(tokenizer, wrong_inputs["input_ids"].squeeze(0))
-        right_tokens = token_strings(tokenizer, right_inputs["input_ids"].squeeze(0))
-        matches, alignment_info = align_tokens(
-            wrong_tokens,
-            right_tokens,
-            wrong_hidden[probe_layer],
-            right_hidden[probe_layer],
+        # Build teacher forcing texts
+        wrong_text = build_teacher_forcing_text(
+            triple.prompt, triple.wrong_chain, triple.metadata
+        )
+        right_text = build_teacher_forcing_text(
+            triple.prompt, triple.correct_chain, triple.metadata
         )
 
+        # Apply system prompt formatting for tokenization (to match get_hidden_states)
+        wrong_text_formatted = wrong_text
+        right_text_formatted = right_text
+        if hasattr(model.tokenizer, "apply_chat_template") and args.system_prompt:
+            wrong_messages = [
+                {"role": "system", "content": args.system_prompt},
+                {"role": "user", "content": wrong_text},
+            ]
+            right_messages = [
+                {"role": "system", "content": args.system_prompt},
+                {"role": "user", "content": right_text},
+            ]
+            wrong_text_formatted = model.tokenizer.apply_chat_template(
+                wrong_messages, tokenize=False, add_generation_prompt=False
+            )
+            right_text_formatted = model.tokenizer.apply_chat_template(
+                right_messages, tokenize=False, add_generation_prompt=False
+            )
+
+        # Tokenize
+        wrong_inputs = model.tokenize(wrong_text_formatted, return_offsets_mapping=True)
+        right_inputs = model.tokenize(right_text_formatted, return_offsets_mapping=True)
+
+        # Get hidden states
+        wrong_hidden = model.get_hidden_states(wrong_text, capture_layers, system_prompt=args.system_prompt)
+        right_hidden = model.get_hidden_states(right_text, capture_layers, system_prompt=args.system_prompt)
+
+        # Get tokens and align
+        wrong_tokens = model.token_strings(wrong_inputs["input_ids"].squeeze(0))
+        right_tokens = model.token_strings(right_inputs["input_ids"].squeeze(0))
+        alignment_hidden_wrong = (
+            wrong_hidden.get(alignment_layer) if alignment_method == "hidden_dp" else None
+        )
+        alignment_hidden_right = (
+            right_hidden.get(alignment_layer) if alignment_method == "hidden_dp" else None
+        )
+        matches, alignment_metadata = align_tokens(
+            wrong_tokens,
+            right_tokens,
+            alignment_hidden_wrong,
+            alignment_hidden_right,
+            method=alignment_method,
+            max_shift=args.dp_max_shift,
+            gap_penalty=args.dp_gap_penalty,
+            distance_threshold=args.dp_distance_threshold,
+        )
+
+        # Save hidden states per sample
         sample_dir = args.output_dir / triple.sample_id
         sample_dir.mkdir(parents=True, exist_ok=True)
         for layer_id, tensor in wrong_hidden.items():
@@ -579,61 +668,220 @@ def main() -> None:
         for layer_id, tensor in right_hidden.items():
             torch.save(tensor, sample_dir / f"right_layer{layer_id}.pt")
 
+        # Save alignment
         alignment_path = args.alignment_dir / f"{triple.sample_id}.json"
-        save_alignment(alignment_path, wrong_tokens, right_tokens, matches, alignment_info)
+        save_alignment(alignment_path, wrong_tokens, right_tokens, matches, alignment_metadata)
 
-        if len(probe_features) < args.probe_max_samples:
-            layer_tensor_wrong = wrong_hidden[probe_layer]
-            layer_tensor_right = right_hidden[probe_layer]
-            selected_matches = subsample_pairs(matches, args.probe_max_samples - len(probe_features), rng)
-            for wrong_idx, right_idx in selected_matches:
-                probe_features.append(layer_tensor_wrong[wrong_idx].numpy())
-                probe_labels.append(0)
-                probe_features.append(layer_tensor_right[right_idx].numpy())
-                probe_labels.append(1)
+        alignment_metadata = alignment_metadata or {}
+        alignment_strategy = alignment_metadata.get("strategy", "text")
+        dp_used_alignment_flag = (
+            alignment_strategy == "hidden_dp" and not alignment_metadata.get("used_fallback", False)
+        )
+        dp_used_fallback_flag = alignment_metadata.get("used_fallback", False)
+        dp_metrics = alignment_metadata.get("dp_metrics") if isinstance(alignment_metadata, dict) else None
+        dp_gap_ratio = alignment_metadata.get("gap_ratio")
+        if dp_gap_ratio is None and isinstance(dp_metrics, dict):
+            dp_gap_ratio = dp_metrics.get("gap_ratio")
+        dp_avg_distance = alignment_metadata.get("avg_distance")
+        if dp_avg_distance is None and isinstance(dp_metrics, dict):
+            dp_avg_distance = dp_metrics.get("avg_distance")
+        dp_gap_ratio_value = float(dp_gap_ratio) if dp_gap_ratio is not None else float("nan")
+        dp_avg_distance_value = float(dp_avg_distance) if dp_avg_distance is not None else float("nan")
+
+        # Collect probe data for all layers using specified pooling method
+        for layer_id in target_layers:
+            layer_data = probe_data_per_layer[layer_id]
+            layer_tensor_wrong = wrong_hidden[layer_id]
+            layer_tensor_right = right_hidden[layer_id]
+
+            # Track validity for this sample (will be set to False if we need to skip)
+            sample_valid = True
+
+            if args.pooling_method == "mean":
+                # Mean pooling over entire sequence
+                if len(layer_data["features"]) < args.probe_max_samples * 2:  # *2 for wrong+right
+                    wrong_pooled = layer_tensor_wrong.mean(dim=0).numpy()
+                    right_pooled = layer_tensor_right.mean(dim=0).numpy()
+                    
+                    layer_data["features"].append(wrong_pooled)
+                    layer_data["labels"].append(0)  # 0 = wrong
+                    layer_data["token_positions"].append(-1)  # -1 indicates pooled
+                    layer_data["sample_ids"].append(triple.sample_id)
+                    layer_data["valid"].append(True)
+                    layer_data["dp_used_alignment"].append(False)
+                    layer_data["dp_used_fallback"].append(False)
+                    layer_data["dp_pair_index"].append(-1)
+                    layer_data["dp_gap_ratio"].append(float("nan"))
+                    layer_data["dp_avg_distance"].append(float("nan"))
+
+                    layer_data["features"].append(right_pooled)
+                    layer_data["labels"].append(1)  # 1 = right
+                    layer_data["token_positions"].append(-1)
+                    layer_data["sample_ids"].append(triple.sample_id)
+                    layer_data["valid"].append(True)
+                    layer_data["dp_used_alignment"].append(False)
+                    layer_data["dp_used_fallback"].append(False)
+                    layer_data["dp_pair_index"].append(-1)
+                    layer_data["dp_gap_ratio"].append(float("nan"))
+                    layer_data["dp_avg_distance"].append(float("nan"))
+            
+            elif args.pooling_method == "last_token":
+                # Last token (typically where the answer is generated)
+                if len(layer_data["features"]) < args.probe_max_samples * 2:
+                    wrong_last = layer_tensor_wrong[-1].numpy()
+                    right_last = layer_tensor_right[-1].numpy()
+                    
+                    layer_data["features"].append(wrong_last)
+                    layer_data["labels"].append(0)
+                    layer_data["token_positions"].append(len(layer_tensor_wrong) - 1)
+                    layer_data["sample_ids"].append(triple.sample_id)
+                    layer_data["valid"].append(True)
+                    layer_data["dp_used_alignment"].append(False)
+                    layer_data["dp_used_fallback"].append(False)
+                    layer_data["dp_pair_index"].append(-1)
+                    layer_data["dp_gap_ratio"].append(float("nan"))
+                    layer_data["dp_avg_distance"].append(float("nan"))
+
+                    layer_data["features"].append(right_last)
+                    layer_data["labels"].append(1)
+                    layer_data["token_positions"].append(len(layer_tensor_right) - 1)
+                    layer_data["sample_ids"].append(triple.sample_id)
+                    layer_data["valid"].append(True)
+                    layer_data["dp_used_alignment"].append(False)
+                    layer_data["dp_used_fallback"].append(False)
+                    layer_data["dp_pair_index"].append(-1)
+                    layer_data["dp_gap_ratio"].append(float("nan"))
+                    layer_data["dp_avg_distance"].append(float("nan"))
+            
+            elif args.pooling_method == "per_token":
+                # Per-token: use matched token positions
+                if len(layer_data["features"]) < args.probe_max_samples:
+                    # Subsample matched token positions
+                    selected_matches = subsample_pairs(
+                        matches, args.probe_max_samples - len(layer_data["features"]), rng
+                    )
+                    
+                    for pair_idx, (wrong_idx, right_idx) in enumerate(selected_matches):
+                        # Add wrong token representation
+                        layer_data["features"].append(layer_tensor_wrong[wrong_idx].numpy())
+                        layer_data["labels"].append(0)  # 0 = wrong
+                        layer_data["token_positions"].append(wrong_idx)
+                        layer_data["sample_ids"].append(triple.sample_id)
+                        layer_data["valid"].append(True)
+                        layer_data["dp_used_alignment"].append(dp_used_alignment_flag)
+                        layer_data["dp_used_fallback"].append(dp_used_fallback_flag)
+                        layer_data["dp_pair_index"].append(pair_idx if dp_used_alignment_flag else -1)
+                        layer_data["dp_gap_ratio"].append(dp_gap_ratio_value)
+                        layer_data["dp_avg_distance"].append(dp_avg_distance_value)
+
+                        # Add right token representation
+                        layer_data["features"].append(layer_tensor_right[right_idx].numpy())
+                        layer_data["labels"].append(1)  # 1 = right
+                        layer_data["token_positions"].append(right_idx)
+                        layer_data["sample_ids"].append(triple.sample_id)
+                        layer_data["valid"].append(True)
+                        layer_data["dp_used_alignment"].append(dp_used_alignment_flag)
+                        layer_data["dp_used_fallback"].append(dp_used_fallback_flag)
+                        layer_data["dp_pair_index"].append(pair_idx if dp_used_alignment_flag else -1)
+                        layer_data["dp_gap_ratio"].append(dp_gap_ratio_value)
+                        layer_data["dp_avg_distance"].append(dp_avg_distance_value)
+
+            elif args.pooling_method == "before_final_answer":
+                # Token just before "Final answer" appears
+                if len(layer_data["features"]) < args.probe_max_samples * 2:
+                    # Find position before "Final answer" in wrong chain
+                    wrong_pos = find_position_before_final_answer(wrong_tokens)
+                    # Find position before "Final answer" in correct chain
+                    right_pos = find_position_before_final_answer(right_tokens)
+
+                    # Mark sample as invalid if "Final answer" not found in either chain
+                    if wrong_pos == -1 or right_pos == -1:
+                        if wrong_pos == -1:
+                            LOGGER.warning("Sample %s (wrong): 'Final answer' not found, marking as invalid", triple.sample_id)
+                        if right_pos == -1:
+                            LOGGER.warning("Sample %s (right): 'Final answer' not found, marking as invalid", triple.sample_id)
+                        sample_valid = False
+                        # Use last token as fallback position for invalid samples
+                        wrong_pos = len(layer_tensor_wrong) - 1 if wrong_pos == -1 else wrong_pos
+                        right_pos = len(layer_tensor_right) - 1 if right_pos == -1 else right_pos
+
+                    # Extract hidden states at these positions
+                    wrong_before_answer = layer_tensor_wrong[wrong_pos].numpy()
+                    right_before_answer = layer_tensor_right[right_pos].numpy()
+
+                    layer_data["features"].append(wrong_before_answer)
+                    layer_data["labels"].append(0)  # 0 = wrong
+                    layer_data["token_positions"].append(wrong_pos)
+                    layer_data["sample_ids"].append(triple.sample_id)
+                    layer_data["valid"].append(sample_valid)
+                    layer_data["dp_used_alignment"].append(False)
+                    layer_data["dp_used_fallback"].append(False)
+                    layer_data["dp_pair_index"].append(-1)
+                    layer_data["dp_gap_ratio"].append(float("nan"))
+                    layer_data["dp_avg_distance"].append(float("nan"))
+
+                    layer_data["features"].append(right_before_answer)
+                    layer_data["labels"].append(1)  # 1 = right
+                    layer_data["token_positions"].append(right_pos)
+                    layer_data["sample_ids"].append(triple.sample_id)
+                    layer_data["valid"].append(sample_valid)
+                    layer_data["dp_used_alignment"].append(False)
+                    layer_data["dp_used_fallback"].append(False)
+                    layer_data["dp_pair_index"].append(-1)
+                    layer_data["dp_gap_ratio"].append(float("nan"))
+                    layer_data["dp_avg_distance"].append(float("nan"))
+
+        # Clean up memory after processing each sample
+        del wrong_hidden
+        del right_hidden
+        del wrong_inputs
+        del right_inputs
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
         processed += 1
 
-    LOGGER.info("Processed %d triples (skipped %d missing correct chains)", processed, skipped_missing_chain)
+    LOGGER.info("Processed %d triples (skipped %d missing correct chains)",
+               processed, skipped_missing_chain)
 
-    if not probe_features:
-        LOGGER.warning("No probe samples collected; skipping diagnostics.")
-        return
+    # Save probe data for each layer
+    for layer_id in target_layers:
+        layer_data = probe_data_per_layer[layer_id]
+        if layer_data["features"]:
+            feature_matrix = np.stack(layer_data["features"])
+            label_array = np.array(layer_data["labels"])
+            position_array = np.array(layer_data["token_positions"])
+            sample_id_array = np.array(layer_data["sample_ids"])
+            valid_array = np.array(layer_data["valid"])
+            dp_used_alignment_array = np.array(layer_data["dp_used_alignment"], dtype=bool)
+            dp_used_fallback_array = np.array(layer_data["dp_used_fallback"], dtype=bool)
+            dp_pair_index_array = np.array(layer_data["dp_pair_index"], dtype=np.int32)
+            dp_gap_ratio_array = np.array(layer_data["dp_gap_ratio"], dtype=np.float32)
+            dp_avg_distance_array = np.array(layer_data["dp_avg_distance"], dtype=np.float32)
 
-    feature_matrix = np.stack(probe_features)
-    label_array = np.array(probe_labels)
+            probe_data_path = args.probe_data_dir / f"layer{layer_id}_probe_data.npz"
+            np.savez(
+                probe_data_path,
+                features=feature_matrix,
+                labels=label_array,
+                token_positions=position_array,
+                sample_ids=sample_id_array,
+                valid=valid_array,
+                layer=layer_id,
+                dp_used_alignment=dp_used_alignment_array,
+                dp_used_fallback=dp_used_fallback_array,
+                dp_pair_index=dp_pair_index_array,
+                dp_gap_ratio=dp_gap_ratio_array,
+                dp_avg_distance=dp_avg_distance_array,
+            )
 
-    diagnostics = {
-        "probe_layer": probe_layer,
-        "num_samples": int(feature_matrix.shape[0]),
-    }
-
-    probe_result = fit_linear_probe(feature_matrix, label_array)
-    diagnostics["linear_probe"] = probe_result
-
-    pca_path = args.viz_dir / "linear_separation" / f"layer{probe_layer}_pca.png"
-    pca_points = run_pca(feature_matrix, label_array, pca_path)
-    diagnostics["pca_plot"] = str(pca_path)
-
-    umap_path = args.viz_dir / "linear_separation" / f"layer{probe_layer}_umap.png"
-    umap_points = run_umap(feature_matrix, label_array, umap_path)
-    diagnostics["umap_plot"] = str(umap_path)
-
-    overlay_dir = args.viz_dir / "cluster_overlays"
-    if pca_points is not None:
-        pca_cluster_path = overlay_dir / f"layer{probe_layer}_pca_clusters.png"
-        save_cluster_overlay(pca_points, label_array, pca_cluster_path, title="PCA")
-        diagnostics["pca_cluster_overlay"] = str(pca_cluster_path)
-    if umap_points is not None:
-        umap_cluster_path = overlay_dir / f"layer{probe_layer}_umap_clusters.png"
-        save_cluster_overlay(umap_points, label_array, umap_cluster_path, title="UMAP")
-        diagnostics["umap_cluster_overlay"] = str(umap_cluster_path)
-
-    diagnostics_path = args.viz_dir / f"layer{probe_layer}_diagnostics.json"
-    diagnostics_path.write_text(json.dumps(diagnostics, indent=2), encoding="utf-8")
-    LOGGER.info("Diagnostics written to %s", diagnostics_path)
+            num_valid = np.sum(valid_array)
+            num_invalid = len(valid_array) - num_valid
+            LOGGER.info("Saved probe data for layer %d to %s (%d total samples, %d valid, %d invalid)",
+                       layer_id, probe_data_path, len(layer_data["features"]), num_valid, num_invalid)
+        else:
+            LOGGER.warning("No probe samples collected for layer %d.", layer_id)
 
 
 if __name__ == "__main__":
     main()
-
