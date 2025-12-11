@@ -1,0 +1,5 @@
+{
+  "Baseline (no steering)": 0.12,
+  "Steering loaded \u03b1=0": 0.12,
+  "Full steering \u03b1=1": 0.27
+}
