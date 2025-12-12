@@ -1,0 +1,36 @@
+{
+  "steering_shift": {
+    "mean_l2_shift": 16.585403442382812,
+    "std_l2_shift": 4.156970135227311e-06,
+    "median_l2_shift": 16.585399627685547,
+    "max_l2_shift": 16.585399627685547,
+    "mean_cosine_similarity": 0.8609583377838135,
+    "std_cosine_similarity": 0.010702785104513168,
+    "min_cosine_similarity": 0.8269513845443726
+  },
+  "distance_to_correct_before_steering": {
+    "mean_l2": 15.2734375,
+    "std_l2": 3.015625,
+    "median_l2": 15.328125,
+    "mean_cosine_similarity": 0.8447265625,
+    "std_cosine_similarity": 0.06256103515625
+  },
+  "distance_to_correct_after_steering": {
+    "mean_l2": 22.5911922454834,
+    "std_l2": 2.1234593391418457,
+    "median_l2": 22.540569305419922,
+    "mean_cosine_similarity": 0.727703869342804,
+    "std_cosine_similarity": 0.0604674369096756
+  },
+  "improvement": {
+    "mean_l2_reduction": -7.316193103790283,
+    "mean_cosine_improvement": -0.11711549758911133
+  },
+  "collect_config": {
+    "layer": 28,
+    "steering_coefficient": 1.0,
+    "pooling_method": "last_token",
+    "max_samples": 100,
+    "sample_offset": 100
+  }
+}
